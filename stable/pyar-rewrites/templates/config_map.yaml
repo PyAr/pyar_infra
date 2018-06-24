@@ -1,0 +1,47 @@
+apiVersion: v1
+data:
+  nginx.conf: |
+    events {
+      worker_connections  1024;
+    }
+    http {
+
+      server {
+        listen 80 default_server;
+        location /nginx-health {
+          return 200 "healthy\n";
+        }
+      }
+      server {
+        listen 80;
+        server_name tutorial.python.org.ar tutorialpython.python.org.ar;
+        return 301 http://docs.python.org.ar/tutorial/;
+      }
+      server {  
+        listen 80; 
+        server_name ar.pycon.org www.pycon.com.ar pycon.com.ar pycon.python.com.ar pyconar.python.org.ar; 
+        return 301 http://pycon.python.org.ar; 
+      } 
+      server {
+        listen 80;
+        server_name web.python.org.ar python.org.ar python.com.ar www.python.com.ar pyar.org.ar www.pyar.org.ar; 
+        return 301 http://www.python.org.ar$request_uri;
+      }
+
+      server {
+        listen 80;
+        server_name cdpedia.python.org.ar cdpedia.pyar.org.ar cdpedia.python.com.ar;
+        return 301 http://python.org.ar/Proyectos/CDPedia;
+      }
+
+      server {
+        listen 80;
+        server_name planeta.python.com.ar planet.python.com.ar planet.python.org.ar;
+        return 301 http://planeta.python.org.ar/;
+      }
+
+    }
+ 
+kind: ConfigMap
+metadata:
+  name: nginx-config
