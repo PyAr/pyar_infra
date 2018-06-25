@@ -9,6 +9,7 @@ data:
       server {
         listen 80 default_server;
         location /nginx-health {
+          access_log off;
           return 200 "healthy\n";
         }
       }
