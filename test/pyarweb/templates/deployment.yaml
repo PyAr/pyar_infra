@@ -24,15 +24,33 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
-            - 'python3'
-            - 'manage.py'
-            - 'runserver'
-            - '0.0.0.0:8000'
+            - '/usr/local/bin/gunicorn'
+            - '-c'
+            - 'pyarweb/gunicorn_cfg.py'
+            - 'pyarweb.wsgi'
+            - '--capture-output'
           env: 
+            - name: SECRET_KEY 
+              valueFrom:
+                secretKeyRef:
+                  name: pyarweb-secrets 
+                  key: secret_key
+            - name: DISQUS_API_KEY 
+              valueFrom:
+                secretKeyRef:
+                  name: pyarweb-secrets 
+                  key: disqus_api_key
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: pyarweb-secrets 
+                  key: sentry-dsn
+            - name: DJANGO_SETTINGS_MODULE
+              value: "{{ .Values.env.django_settings_module }}"
             - name: DB_SERVICE 
-              value: "{{ .Values.db.hostname }}"
+              value: "{{ .Values.env.db_hostname }}"
             - name: DB_NAME 
-              value: "{{ .Values.db.dbname }}"
+              value: "{{ .Values.env.db_name }}"
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
@@ -48,21 +66,27 @@ spec:
               containerPort: 8000
               protocol: TCP
           livenessProbe:
-            initialDelaySeconds: 60
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             failureThreshold: 20
             periodSeconds: 30                  
             httpGet:
               path: /
               port: http
+              httpHeaders:
+                - name: Host
+                  value: www.python.org.ar
           readinessProbe:
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             timeoutSeconds: 10
             failureThreshold: 10
             periodSeconds: 30                  
             httpGet:
               path: /
               port: http
+              httpHeaders:
+                - name: Host
+                  value: www.python.org.ar
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}

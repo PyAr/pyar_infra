@@ -7,11 +7,12 @@ replicaCount: 2
 image:
   repository: pyar/pyarweb
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: LoadBalancer
   port: 80
+  loadBalancerIP: 40.117.130.245
 
 resources:
   limits:
@@ -28,6 +29,16 @@ tolerations: []
 
 affinity: {}
 
-db: 
-  hostname: 'pyardb.postgres.database.azure.com'
-  dbname: 'pyarweb_staging'
+env: 
+  db_hostname: 'pyardb.postgres.database.azure.com'
+  db_name: 'pyarweb_staging'
+  django_settings_module: 'pyarweb.settings.staging'
+
+
+keel:
+  policy: force
+  trigger: poll
+  pollSchedule: "@every 5m"
+  images:
+    - repository: image.repository
+      tag: image.tag
