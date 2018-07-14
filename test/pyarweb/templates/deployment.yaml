@@ -1,0 +1,97 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "pyarweb.fullname" . }}
+  labels:
+    app: {{ template "pyarweb.name" . }}
+    chart: {{ template "pyarweb.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "pyarweb.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "pyarweb.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - '/usr/local/bin/gunicorn'
+            - '-c'
+            - 'pyarweb/gunicorn_cfg.py'
+            - 'pyarweb.wsgi'
+            - '--capture-output'
+          env: 
+            - name: SECRET_KEY 
+              valueFrom:
+                secretKeyRef:
+                  name: pyarweb-secrets 
+                  key: secret_key
+            - name: DISQUS_API_KEY 
+              valueFrom:
+                secretKeyRef:
+                  name: pyarweb-secrets 
+                  key: disqus_api_key
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: pyarweb-secrets 
+                  key: sentry-dsn
+            - name: DJANGO_SETTINGS_MODULE
+              value: "{{ .Values.env.django_settings_module }}"
+            - name: DB_SERVICE 
+              value: "{{ .Values.env.db_hostname }}"
+            - name: DB_NAME 
+              value: "{{ .Values.env.db_name }}"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: pyarweb-secrets
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: pyarweb-secrets
+                  key: password
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 20
+            periodSeconds: 30                  
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 10
+            periodSeconds: 30                  
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

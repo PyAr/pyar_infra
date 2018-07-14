@@ -1,0 +1,44 @@
+# Default values for pyarweb.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: pyar/pyarweb
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: LoadBalancer
+  port: 80
+  loadBalancerIP: 40.117.130.245
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 512Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+env: 
+  db_hostname: 'pyardb.postgres.database.azure.com'
+  db_name: 'pyarweb_staging'
+  django_settings_module: 'pyarweb.settings.staging'
+
+
+keel:
+  policy: force
+  trigger: poll
+  pollSchedule: "@every 5m"
+  images:
+    - repository: image.repository
+      tag: image.tag
