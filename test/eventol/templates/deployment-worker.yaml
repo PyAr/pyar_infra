@@ -1,0 +1,60 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "eventol.fullname" . }}-worker
+  labels:
+    app: {{ template "eventol.name" . }}-worker
+    chart: {{ template "eventol.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.workerReplicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "eventol.name" . }}-worker
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "eventol.name" . }}-worker
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-worker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+           - '/bin/ash'
+           - '-c' 
+           - 'cd eventol; python3 ./manage.py runworker'
+          env: 
+          {{- range $key, $value := .Values.env }}
+            - name: {{ $key | upper | replace "." "_" }}
+              value: {{ quote $value }}
+          {{- end }}  
+          {{- if .Values.secretsName }}
+          {{ include "env.secrets" . | indent 12 }}
+          {{- end }}  
+          volumeMounts:
+          - name: mediafiles
+            mountPath: {{ .Values.mediafiles.path }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: mediafiles
+          azureFile:
+            secretName: {{ .Values.mediafiles.azure.secretName }}
+            shareName: {{ .Values.mediafiles.azure.shareName }}
+            readOnly: false
