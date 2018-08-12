@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "eventol.fullname" . }}
+  labels:
+    app: {{ template "eventol.name" . }}
+    chart: {{ template "eventol.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http-nginx
+      protocol: TCP
+      name: http-nginx
+  selector:
+    app: {{ template "eventol.name" . }}
+    release: {{ .Release.Name }}
