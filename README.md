@@ -33,3 +33,9 @@ A merge to master in [pyarweb](https://github.com/PyAr/pyarweb/) is triggering a
 
 Production environment is still running in USLA. (manual deploy)
 
+
+## HTTPS config
+
+We are using HTTPS with [Let's Encrypt](https://letsencrypt.org/)
+
+Settings details at: https://docs.microsoft.com/en-us/azure/aks/ingress
