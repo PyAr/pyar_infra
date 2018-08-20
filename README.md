@@ -8,9 +8,17 @@ Currently we are migrating to [kubernetes](http://kubernetes.io/) in Azure [aks]
 
 We use [Helm](https://www.helm.sh/) as a package manager and [Keel](https://keel.sh/) for continuous delivery.
 
+[Step-by-step guide to deploy de cluster](docs/k8s.md)
+
 ### Keel deploy 
 
 `helm upgrade --install keel stable/keel --set helmProvider.enabled="true"`
+
+### HTTPS config
+
+We are using HTTPS with [Let's Encrypt](https://letsencrypt.org/)
+
+Settings details at: https://docs.microsoft.com/en-us/azure/aks/ingress
 
 ### Redirecter.
 
@@ -21,8 +29,11 @@ All domains except python.org.ar are pointing to it.
 
 Nginx configuration is stored in a config-map: stable/pyar-rewrites/templates/config_map.yaml 
 
-To deploy it run `helm upgrade --install pyar-rewrites --recreate-pods stable/pyar-rewrites`
+To deploy it run: 
 
+```bash 
+helm upgrade --install --wait --recreate-pods pyar-rewrites stable/pyar-rewrites
+```
 
 ## Python Argentina community website.
 http://www.python.org.ar
@@ -33,3 +44,22 @@ A merge to master in [pyarweb](https://github.com/PyAr/pyarweb/) is triggering a
 
 Production environment is still running in USLA. (manual deploy)
 
+## Events site (EventoL)
+
+> PostgreSQL (staging and production) database running in a Ubuntu Server VM.
+
+https://eventos.python.org.ar 
+
+Events site, using [EventoL](https://github.com/eventoL/eventoL). We use it to host PyDays, PyCon, Pycamp and other events.
+
+[Production:](https://eventos.python.org.ar)
+
+```bash
+helm upgrade --install  --wait --timeout 60000 --values values/production/eventol.yaml production-eventos test/eventol
+```
+
+[Staging](http://staging.eventos.python.org.ar/)
+
+```bash
+helm upgrade --install  --wait --timeout 60000 --values values/staging/eventol.yaml staging-eventos test/eventol
+```

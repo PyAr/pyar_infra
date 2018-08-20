@@ -1,0 +1,6 @@
+
+controller:
+  config: {"proxy-body-size": "0"}
+  image:
+    tag: 0.9.0-beta.7
+

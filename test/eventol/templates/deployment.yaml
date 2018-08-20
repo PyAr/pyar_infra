@@ -96,7 +96,7 @@ spec:
       volumes:
         - name: nginx-proxy-config
           configMap:
-            name: {{ .Chart.Name }}-nginx
+            name: {{ template "eventol.fullname" . }}-nginx
         - name: mediafiles
           azureFile:
             secretName: {{ .Values.mediafiles.azure.secretName }}
