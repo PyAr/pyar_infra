@@ -7,7 +7,7 @@ workerReplicaCount: 1
 
 image:
   repository: gilgamezh/eventol
-  tag: latest
+  tag: pyconar-0.1
   pullPolicy: Always
 
 service:
@@ -22,6 +22,24 @@ resources:
     cpu: 200m
     memory: 512Mi
 
+ingress:
+  enabled: true
+  annotations: 
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # proxy-body-size duplicated intentionally. more at: https://github.com/kubernetes/ingress-nginx/issues/1824#issuecomment-375956711
+    nginx.ingress.kubernetes.io/proxy-body-size: 25m 
+    ingress.kubernetes.io/proxy-body-size: 25m  
+  path: /
+  hosts:
+    - eventos.python.org.ar
+  tls:
+    - secretName: tls-secret
+      hosts:
+        - eventos.python.org.ar
+
 
 nodeSelector: {}
 
@@ -33,7 +51,7 @@ secretsName: eventol-production
 
 env: 
   DJANGO_CONFIGURATION: PyarProd
-  REDIS_HOST: eventos-production-redis-master
+  REDIS_HOST: production-eventos-redis-master
   EMAIL_FROM: donotreply@python.org.ar
   DEFAULT_FROM_EMAIL: donotreply@python.org.ar
   EMAIL_BACKEND: 'django.core.mail.backends.smtp.EmailBackend'
@@ -42,4 +60,4 @@ mediafiles:
   path: /usr/src/app/eventol/media
   azure:
     secretName: eventol-production-secret-azure-file
-    shareName: eventol-production-static
+    shareName: eventol-prod-static

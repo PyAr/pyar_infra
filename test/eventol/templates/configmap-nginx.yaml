@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Chart.Name }}-nginx
+  name: {{ template "eventol.fullname" . }}-nginx
 data:
   nginx.conf: |-
     user  nginx;

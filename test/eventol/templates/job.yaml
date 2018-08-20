@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "eventol.fullname" . }}
+  name: {{ template "eventol.fullname" . }}-job
   labels:
-    app: {{ template "eventol.name" . }}
+    app: {{ template "eventol.name" . }}-job
     chart: {{ template "eventol.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "eventol.name" . }}
+        app: {{ template "eventol.name" . }}-job
         release: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure

@@ -7,7 +7,7 @@ workerReplicaCount: 1
 
 image:
   repository: gilgamezh/eventol
-  tag: latest
+  tag: pyconar-0.1
   pullPolicy: Always
 
 service:
@@ -17,7 +17,7 @@ service:
 resources:
   limits:
     cpu: 1
-    memory: 1Gi
+    memory: 512Mi
   requests:
     cpu: 200m
     memory: 512Mi
