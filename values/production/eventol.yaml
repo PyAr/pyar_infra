@@ -10,10 +10,6 @@ image:
   tag: pyconar-0.1
   pullPolicy: Always
 
-service:
-  type: LoadBalancer
-  port: 80
-
 resources:
   limits:
     cpu: 1
