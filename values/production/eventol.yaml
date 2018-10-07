@@ -7,7 +7,7 @@ workerReplicaCount: 1
 
 image:
   repository: gilgamezh/eventol
-  tag: pyconar-0.1
+  tag: pyconar-0.6.3
   pullPolicy: Always
 
 resources:
