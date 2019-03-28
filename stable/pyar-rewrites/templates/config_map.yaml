@@ -40,6 +40,11 @@ data:
         server_name planeta.python.com.ar planet.python.com.ar planet.python.org.ar;
         return 301 http://planeta.python.org.ar/;
       }
+      server {
+        listen 80;
+        server_name diversidad.python.org.ar;
+        return 301 https://ac.python.org.ar/diversidad/index.html;
+      }
 
     }
  
