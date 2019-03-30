@@ -1,0 +1,55 @@
+# Default values for asoc_members.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: pyar/asoc_members
+  tag: beta
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 512Mi
+
+ingress:
+  enabled: true
+  annotations: 
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 25m 
+    ingress.kubernetes.io/proxy-body-size: 25m  
+  path: /
+  hosts:
+    - socios.python.org.ar
+  tls:
+    - secretName: tls-secret-socios
+      hosts:
+        - socios.python.org.ar
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+secretsName: socios-production
+
+env: 
+  DJANGO_CONFIGURATION: Prod
+  APP_DOMAIN: "*"
+  DJANGO_SETTINGS_MODULE: website.settings

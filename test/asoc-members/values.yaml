@@ -1,0 +1,68 @@
+# Default values for asoc-members.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+replicaCountJob: 1
+
+image:
+  repository: pyar/asoc_members
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 200m
+    memory: 512Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+secretsName: socios-production
+
+env: 
+  DJANGO_CONFIGURATION: Prod
+  APP_DOMAIN: socios.python.org.ar
+  DJANGO_SETTINGS_MODULE: website.settings
+
+command: 
+  - '/usr/local/bin/gunicorn'
+  - '-w'
+  - '2'
+  - '--threads'
+  - '4'
+  - '-c'
+  - 'website/gunicorn_cfg.py'
+  - 'website.wsgi'
+
+command_job: 
+  - '/bin/bash'
+  - '-c' 
+  - 'python3 ./manage.py migrate'

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "asoc-members.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "asoc-members.name" . }}
+    helm.sh/chart: {{ include "asoc-members.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "asoc-members.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
