@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: pyar/asoc_members
-  tag: beta
+  tag: beta2
   pullPolicy: Always
 
 nameOverride: ""
