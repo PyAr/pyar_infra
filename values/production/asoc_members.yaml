@@ -35,11 +35,11 @@ ingress:
     ingress.kubernetes.io/proxy-body-size: 25m
   path: /
   hosts:
-    - admin.python.org.ar
+    - admin.ac.python.org.ar
   tls:
     - secretName: tls-secret-socios
       hosts:
-        - admin.python.org.ar
+        - admin.ac.python.org.ar
 
 nodeSelector: {}
 
