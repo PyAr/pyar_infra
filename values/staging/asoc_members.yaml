@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: pyar/asoc_members
-  tag: production
+  tag: staging
   pullPolicy: Always
 
 nameOverride: ""
@@ -35,11 +35,11 @@ ingress:
     ingress.kubernetes.io/proxy-body-size: 25m
   path: /
   hosts:
-    - admin.python.org.ar
+    - admin.staging.python.org.ar
   tls:
     - secretName: tls-secret-socios
       hosts:
-        - admin.python.org.ar
+        - admin.staging.python.org.ar
 
 nodeSelector: {}
 
@@ -47,9 +47,9 @@ tolerations: []
 
 affinity: {}
 
-secretsName: socios-production
+secretsName: admin-production
 
 env:
-  DJANGO_CONFIGURATION: Prod
+  DJANGO_CONFIGURATION: Staging
   APP_DOMAIN: "*"
   DJANGO_SETTINGS_MODULE: website.settings
