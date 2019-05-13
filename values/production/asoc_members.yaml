@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: pyar/asoc_members
-  tag: production
+  tag: stable
   pullPolicy: Always
 
 nameOverride: ""
