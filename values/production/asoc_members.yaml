@@ -37,7 +37,7 @@ ingress:
   hosts:
     - admin.ac.python.org.ar
   tls:
-    - secretName: tls-secret-socios
+    - secretName: tls-secret-ac-admin
       hosts:
         - admin.ac.python.org.ar
 
@@ -47,7 +47,7 @@ tolerations: []
 
 affinity: {}
 
-secretsName: socios-production
+secretsName: ac-admin-production
 
 env:
   DJANGO_CONFIGURATION: Prod

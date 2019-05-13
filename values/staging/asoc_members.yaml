@@ -37,7 +37,7 @@ ingress:
   hosts:
     - admin.staging.ac.python.org.ar
   tls:
-    - secretName: tls-secret-socios
+    - secretName: tls-secret-staging-ac-admin
       hosts:
         - admin.staging.ac.python.org.ar
 
@@ -47,7 +47,7 @@ tolerations: []
 
 affinity: {}
 
-secretsName: admin-production
+secretsName: ac-admin-staging
 
 env:
   DJANGO_CONFIGURATION: Staging
