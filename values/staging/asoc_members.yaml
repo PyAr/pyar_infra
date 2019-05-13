@@ -2,11 +2,11 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: pyar/asoc_members
-  tag: stable
+  tag: latest
   pullPolicy: Always
 
 nameOverride: ""
@@ -35,11 +35,11 @@ ingress:
     ingress.kubernetes.io/proxy-body-size: 25m
   path: /
   hosts:
-    - admin.ac.python.org.ar
+    - admin.staging.ac.python.org.ar
   tls:
-    - secretName: tls-secret-ac-admin
+    - secretName: tls-secret-staging-ac-admin
       hosts:
-        - admin.ac.python.org.ar
+        - admin.staging.ac.python.org.ar
 
 nodeSelector: {}
 
@@ -47,9 +47,9 @@ tolerations: []
 
 affinity: {}
 
-secretsName: ac-admin-production
+secretsName: ac-admin-staging
 
 env:
-  DJANGO_CONFIGURATION: Prod
+  DJANGO_CONFIGURATION: Staging
   APP_DOMAIN: "*"
   DJANGO_SETTINGS_MODULE: website.settings
