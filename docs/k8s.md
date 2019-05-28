@@ -43,10 +43,15 @@ kubectl get nodes
 >  (:warning: no están en el repo)
 
 ```bash 
-for SECRET_FILE in $(ls *.yaml); do 
-    kubectl create -f ${SECRET_FILE}; 
-done
+kubectl apply -f /path/to/secrets/files/
 ```
+
+### Actualizar secretos: 
+
+```bash 
+scripts/dump_k8s_secrets.sh /path/to/secrets/files/
+## modificar los secretos 
+kubectl apply -f /path/to/secrets/files/
 
 ## Configurar nginx-ingress con Let's Encrypt. 
 
