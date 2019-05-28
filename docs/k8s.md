@@ -48,10 +48,16 @@ kubectl apply -f /path/to/secrets/files/
 
 ### Actualizar secretos: 
 
+
+Con el script `dump_k8s_secrets.sh` es posible hacer un dump de los secretos del cluster. 
+Se recomienda guardarlos en un repo .git y utilizar este script como si fuese un "PULL" y apply como 
+si fuese un "PUSH"
+
 ```bash 
 scripts/dump_k8s_secrets.sh /path/to/secrets/files/
 ## modificar los secretos 
 kubectl apply -f /path/to/secrets/files/
+```
 
 ## Configurar nginx-ingress con Let's Encrypt. 
 
