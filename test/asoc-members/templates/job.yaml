@@ -12,7 +12,6 @@ metadata:
     "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
 spec:
-  replicas: {{ .Values.replicaCountJob }}
   template:
     metadata:
       labels:

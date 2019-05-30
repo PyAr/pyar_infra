@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: pyar/asoc_members
-  tag: stable
+  tag: latest
   pullPolicy: Always
 
 nameOverride: ""
@@ -53,3 +53,4 @@ env:
   DJANGO_CONFIGURATION: Prod
   APP_DOMAIN: "*"
   DJANGO_SETTINGS_MODULE: website.settings
+  EMAIL_FROM: lalita@ac.python.org.ar
