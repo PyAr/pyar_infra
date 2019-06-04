@@ -48,6 +48,7 @@ tolerations: []
 affinity: {}
 
 secretsName: ac-admin-production
+secretsFilesName: ac-admin-production-files
 
 env:
   DJANGO_CONFIGURATION: Prod

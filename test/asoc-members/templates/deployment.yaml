@@ -50,6 +50,21 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: secrets-files
+              mountPath: "/etc/secrets"
+              readOnly: true
+      volumes:
+        - name: secrets-files
+          secret:
+            secretName: {{ .Values.secretsFilesName }}
+            items:
+            - key: afip_pyar_crt
+              path: afip_pyar.crt
+            - key: afip_pyar_key
+              path: afip_pyar.key
+            - key: gdrive
+              path: gdrive.json
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
