@@ -51,6 +51,7 @@ env:
   EMAIL_FROM: donotreply@python.org.ar
   DEFAULT_FROM_EMAIL: donotreply@python.org.ar
   EMAIL_BACKEND: 'django.core.mail.backends.smtp.EmailBackend'
+  PSQL_OPTIONS_SSL: 'require'
 
 mediafiles:
   path: /usr/src/app/eventol/media

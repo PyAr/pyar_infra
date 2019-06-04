@@ -2,6 +2,9 @@
 Python Argentina Infrastructure
 This is the repository with all the code and documentation to handle PyAr infrastructure
 
+
+[![join our chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://pyar.zulipchat.com/#streams/200416/Infra)
+
 Our infrastructure have been hosted by [USLA](http://drupal.usla.org.ar/) for long time.
 
 Currently we are migrating to [kubernetes](http://kubernetes.io/) in Azure [aks](https://docs.microsoft.com/en-us/azure/aks/)
