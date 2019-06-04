@@ -15,7 +15,11 @@ We use [Helm](https://www.helm.sh/) as a package manager and [Keel](https://keel
 
 ### Keel deploy 
 
-`helm upgrade --install keel stable/keel --set helmProvider.enabled="true"`
+```bash
+helm repo add keel-charts https://charts.keel.sh 
+helm repo update
+helm upgrade --install keel --namespace=kube-system keel-charts/keel
+```
 
 ### HTTPS config
 
@@ -49,8 +53,6 @@ Production environment is still running in USLA. (manual deploy)
 
 ## Events site (EventoL)
 
-> PostgreSQL (staging and production) database running in a Ubuntu Server VM.
-
 https://eventos.python.org.ar 
 
 Events site, using [EventoL](https://github.com/eventoL/eventoL). We use it to host PyDays, PyCon, Pycamp and other events.
@@ -61,8 +63,11 @@ Events site, using [EventoL](https://github.com/eventoL/eventoL). We use it to h
 helm upgrade --install  --wait --timeout 60000 --values values/production/eventol.yaml production-eventos test/eventol
 ```
 
-[Staging](http://staging.eventos.python.org.ar/)
+## Asociación Civil administration. (asoc_members)
 
-```bash
-helm upgrade --install  --wait --timeout 60000 --values values/staging/eventol.yaml staging-eventos test/eventol
+[Production](https://admin.ac.python.org.ar)
+
+
+```bash 
+helm upgrade --install --wait --timeout 60000 --values values/production/asoc_members.yaml production-admin test/asoc-members
 ```
