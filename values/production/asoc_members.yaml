@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: pyar/asoc_members
-  tag: latest
+  tag: stable
   pullPolicy: Always
 
 nameOverride: ""
@@ -55,3 +55,12 @@ env:
   APP_DOMAIN: "*"
   DJANGO_SETTINGS_MODULE: website.settings
   EMAIL_FROM: lalita@ac.python.org.ar
+
+
+keel:
+  # keel policy (all/major/minor/patch/force)
+  policy: force
+  # images to track and update
+  images:
+    - repository: image.repository # [1]
+      tag: image.tag  # [2]

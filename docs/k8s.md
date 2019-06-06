@@ -127,6 +127,13 @@ helm install \
 ```bash 
 kubectl create -f k8s/letsencrypt/cluster-issuer.yaml
 ```
+
+## Install keel for continuos delivery
+
+clone keel master as the chart is updated to us ingress. then
+
+`helm upgrade --install keel path/to/chart/keel --values values/production/keel.yaml --namespace=kube-system`
+
 ## Hints:
 
 - Una vez que k8s esta funcionando se puede continuar con los pasos detallados en README.md para cada proyecto. 

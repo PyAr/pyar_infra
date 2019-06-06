@@ -18,6 +18,8 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "asoc-members.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        date/deploy-date: {{ now | quote }}
     spec:
       restartPolicy: Always
       containers:
