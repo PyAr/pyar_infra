@@ -60,6 +60,7 @@ env:
 keel:
   # keel policy (all/major/minor/patch/force)
   policy: force
+  match-tag: true
   # images to track and update
   images:
     - repository: image.repository # [1]
