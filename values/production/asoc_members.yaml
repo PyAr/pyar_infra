@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: pyar/asoc_members
-  tag: stable
+  tag: prod-0.1.0
   pullPolicy: Always
 
 nameOverride: ""
@@ -59,8 +59,7 @@ env:
 
 keel:
   # keel policy (all/major/minor/patch/force)
-  policy: force
-  match-tag: true
+  policy: "glob:prod-*"
   # images to track and update
   images:
     - repository: image.repository # [1]
