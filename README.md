@@ -13,14 +13,6 @@ We use [Helm](https://www.helm.sh/) as a package manager and [Keel](https://keel
 
 [Step-by-step guide to deploy de cluster](docs/k8s.md)
 
-### Keel deploy 
-
-```bash
-helm repo add keel-charts https://charts.keel.sh 
-helm repo update
-helm upgrade --install keel --namespace=kube-system keel-charts/keel
-```
-
 ### HTTPS config
 
 We are using HTTPS with [Let's Encrypt](https://letsencrypt.org/)
