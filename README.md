@@ -75,6 +75,10 @@ Using https://github.com/helm/charts/tree/master/stable/postgresql
 helm install --name pgcluster -f values/production/postgres_cluster.yaml stable/postgresql
 ```
 
+
+This cluster is using a PersistentVolumeClaim and a "lock" is created manually in azure to prevent unintensional deletes. 
+Detail about locks: https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-lock-resources
+
 ### Connect to the cluster
 
 ```bash
