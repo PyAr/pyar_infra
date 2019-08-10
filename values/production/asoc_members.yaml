@@ -55,6 +55,7 @@ env:
   APP_DOMAIN: "*"
   DJANGO_SETTINGS_MODULE: website.settings
   EMAIL_FROM: lalita@ac.python.org.ar
+  POSTGRES_HOST: pgcluster-postgresql
 
 
 keel:

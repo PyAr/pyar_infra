@@ -63,3 +63,32 @@ helm upgrade --install  --wait --timeout 60000 --values values/production/evento
 ```bash 
 helm upgrade --install --wait --timeout 60000 --values values/production/asoc_members.yaml production-admin test/asoc-members
 ```
+
+
+## PostgreSQL cluster:
+
+Using https://github.com/helm/charts/tree/master/stable/postgresql
+
+### Deploy: 
+
+```bash 
+helm install --name pgcluster -f values/production/postgres_cluster.yaml stable/postgresql
+```
+
+### Connect to the cluster
+
+```bash
+# get the password
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace default pgcluster-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+# connect
+kubectl run pgcluster-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.4.0-debian-9-r34 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host pgcluster-postgresql -U postgres -p 5432
+```
+
+###  Configuration
+
+We have to create the databases and users manually
+
+
+## Backups
+
+(not documented)
