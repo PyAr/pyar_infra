@@ -1,0 +1,51 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: batch-every-twelve-hours
+spec:
+  schedule: "0 */12 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: pgsql-backup-asocmembers
+            image: gilgamezh/postgres-backup-container
+            imagePullPolicy: Always
+            env:
+            - name: PGHOST
+              value: "pgcluster-postgresql"
+            - name: PGDATABASE
+              value: "asoc_members"
+            - name: PGUSER
+              value: "postgres"
+            - name: PGPASSWORD
+              valueFrom: 
+                secretKeyRef:
+                   name: pgcluster-postgresql
+                   key: postgresql-password
+            volumeMounts:
+            - mountPath: "/pg_backup"
+              name: backup-volume
+          - name: pgsql-backup-eventol
+            image: gilgamezh/postgres-backup-container
+            env:
+            - name: PGHOST
+              value: "pgcluster-postgresql"
+            - name: PGDATABASE
+              value: "eventol_prod"
+            - name: PGUSER
+              value: "postgres"
+            - name: PGPASSWORD
+              valueFrom: 
+                secretKeyRef:
+                   name: pgcluster-postgresql
+                   key: postgresql-password
+            volumeMounts:
+            - mountPath: "/pg_backup"
+              name: backup-volume
+          volumes:
+            - name: backup-volume
+              persistentVolumeClaim:
+                claimName: pg-backup-pvc
