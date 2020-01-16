@@ -4,7 +4,8 @@
     - clonar el repo de PyAr Infra: https://github.com/PyAr/pyar_infra
     - Permisos en la cuenta de azure de PyAr
     - kubectl 
-    - helm 
+    - helm (v2)
+    - fades
     - az CLI (yo uso `az='fades -d azure-cli -x az'`)
 
 ## Crear el cluster de k8s
