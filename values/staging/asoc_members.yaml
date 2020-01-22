@@ -48,8 +48,10 @@ tolerations: []
 affinity: {}
 
 secretsName: ac-admin-staging
+secretsFilesName: ac-admin-staging-files
 
 env:
   DJANGO_CONFIGURATION: Staging
   APP_DOMAIN: "*"
   DJANGO_SETTINGS_MODULE: website.settings
+  POSTGRES_HOST: pgcluster-postgresql
