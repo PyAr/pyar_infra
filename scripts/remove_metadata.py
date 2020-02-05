@@ -1,4 +1,4 @@
-#!/bin/fades
+#!/usr/bin/env fades
 
 
 # This script is to remove metadata annotations from a k8s secret file
