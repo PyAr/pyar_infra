@@ -8,6 +8,7 @@ image:
   repository: pyar/wiki
   tag: latest
   pullPolicy: Always
+  imagePullPolicy: "Always"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -49,7 +50,7 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
   limits:
     cpu: 100m
     memory: 128Mi
