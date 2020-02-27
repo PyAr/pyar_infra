@@ -1,28 +1,6 @@
-# Default values for asoc_members.
+# Staging values for asoc_members.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
-replicaCount: 1
-
-image:
-  repository: pyar/asoc_members
-  tag: latest
-  pullPolicy: Always
-
-nameOverride: ""
-fullnameOverride: ""
-
-service:
-  type: ClusterIP
-  port: 80
-
-resources:
-  limits:
-    cpu: 1
-    memory: 1Gi
-  requests:
-    cpu: 200m
-    memory: 512Mi
 
 ingress:
   enabled: true
@@ -41,12 +19,6 @@ ingress:
       hosts:
         - admin.staging.ac.python.org.ar
 
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
 secretsName: ac-admin-staging
 secretsFilesName: ac-admin-staging-files
 
@@ -55,3 +27,16 @@ env:
   APP_DOMAIN: "*"
   DJANGO_SETTINGS_MODULE: website.settings
   POSTGRES_HOST: pgcluster-postgresql
+
+command: 
+  - '/usr/local/bin/gunicorn'
+  - '-w'
+  - '2'
+  - '--threads'
+  - '4'
+  - '--log-syslog'
+  - '--log-level'
+  - 'debug'
+  - '-c'
+  - 'website/gunicorn_cfg.py'
+  - 'website.wsgi'
