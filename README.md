@@ -106,3 +106,7 @@ Using https://github.com/helm/charts/tree/master/testing/wiki
 ```bash
 helm upgrade --install --wait --timeout 60000 --values values/staging/pyar-wiki.yaml staging-wiki test/pyar-wiki --debug --recreate-pods
 ```
+
+```bash
+helm upgrade --install --wait --timeout 60000 --values values/production/pyar-wiki.yaml staging-wiki test/pyar-wiki --debug --recreate-pods
+```
