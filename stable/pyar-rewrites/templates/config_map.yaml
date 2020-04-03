@@ -45,6 +45,11 @@ data:
         server_name diversidad.python.org.ar;
         return 301 https://ac.python.org.ar/diversidad/index.html;
       }
+      server {
+        listen 80;
+        server_name charlas.python.org.ar;
+        return 301 https://pyar.discourse.group/;
+      }
 
     }
  
