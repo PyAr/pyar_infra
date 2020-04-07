@@ -110,3 +110,13 @@ helm upgrade --install --wait --timeout 60000 --values values/staging/pyar-wiki.
 ```bash
 helm upgrade --install --wait --timeout 60000 --values values/production/pyar-wiki.yaml prod-wiki test/pyar-wiki --debug --recreate-pods
 ```
+
+## Web
+
+Using https://github.com/helm/charts/tree/master/testing/wiki
+
+### Deploy
+
+```bash
+helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.yaml pyarweb-staging test/pyarweb
+```

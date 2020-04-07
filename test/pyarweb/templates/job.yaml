@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "pyarweb.fullname" . }}
+  name: {{ include "pyarweb.fullname" . }}-job
   labels:
-    app: {{ template "pyarweb.name" . }}
-    chart: {{ template "pyarweb.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "pyarweb.name" . }}-job
+    helm.sh/chart: {{ include "pyarweb.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "1"
@@ -15,61 +15,37 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "pyarweb.name" . }}
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "pyarweb.name" . }}-job
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       restartPolicy: OnFailure
       containers:
         - name: {{ .Chart.Name }}-job
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: 
-           - '/bin/bash'
-           - '-c' 
-           - 'python3 ./manage.py migrate'
-          env: 
-            - name: SECRET_KEY 
-              valueFrom:
-                secretKeyRef:
-                  name: pyarweb-secrets 
-                  key: secret_key
-            - name: DISQUS_API_KEY 
-              valueFrom:
-                secretKeyRef:
-                  name: pyarweb-secrets 
-                  key: disqus_api_key
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: pyarweb-secrets 
-                  key: sentry-dsn
-            - name: DJANGO_SETTINGS_MODULE
-              value: "{{ .Values.env.django_settings_module }}"
-            - name: DB_SERVICE 
-              value: "{{ .Values.env.db_hostname }}"
-            - name: DB_NAME 
-              value: "{{ .Values.env.db_name }}"
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: pyarweb-secrets
-                  key: username
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: pyarweb-secrets
-                  key: password
+          env:
+          {{- range $key, $value := .Values.env }}
+            - name: {{ $key | upper | replace "." "_" }}
+              value: {{ quote $value }}
+          {{- end }}
+          {{- if .Values.secretsName }}
+          {{ include "env.secrets" . | indent 12 }}
+          {{- end }}
+          command:
+          {{- range .Values.command_job }}
+          - {{ . | quote }}
+          {{- end }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     {{- with .Values.affinity }}
       affinity:
-{{ toYaml . | indent 8 }}
+        {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- with .Values.tolerations }}
       tolerations:
-{{ toYaml . | indent 8 }}
+        {{- toYaml . | nindent 8 }}
     {{- end }}
