@@ -20,12 +20,12 @@ data:
       }
       server {  
         listen 80; 
-        server_name ar.pycon.org www.pycon.com.ar pycon.com.ar pycon.python.com.ar pyconar.python.org.ar; 
+        server_name ar.pycon.org www.pycon.com.ar pycon.com.ar pycon.python.com.ar pyconar.python.org.ar pycon.ar;
         return 301 http://pycon.python.org.ar; 
       } 
       server {
         listen 80;
-        server_name web.python.org.ar python.org.ar python.com.ar www.python.com.ar pyar.org.ar www.pyar.org.ar; 
+        server_name web.python.org.ar python.org.ar python.com.ar www.python.com.ar pyar.org.ar www.pyar.org.ar python.ar;
         return 301 http://www.python.org.ar$request_uri;
       }
 
