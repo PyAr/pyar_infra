@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "pyarweb.fullname" . }}
+  name: {{ include "pyarweb.fullname" . }}
   labels:
-    app: {{ template "pyarweb.name" . }}
-    chart: {{ template "pyarweb.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "pyarweb.name" . }}
+    helm.sh/chart: {{ include "pyarweb.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,5 +15,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "pyarweb.name" . }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "pyarweb.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
