@@ -1,4 +1,4 @@
-# PyAr infrastructure 
+# PyAr infrastructure
 Python Argentina Infrastructure
 This is the repository with all the code and documentation to handle PyAr infrastructure
 
@@ -21,23 +21,23 @@ Settings details at: https://docs.microsoft.com/en-us/azure/aks/ingress
 
 ### Redirecter.
 
-We have lot of domains. But python.org.ar is our principal. 
+We have lot of domains. But python.org.ar is our principal.
 
 To handle redirects from other domains we are using a nginx server. This server is handlign `redirecter.python.org.ar`
 All domains except python.org.ar are pointing to it.
 
-Nginx configuration is stored in a config-map: stable/pyar-rewrites/templates/config_map.yaml 
+Nginx configuration is stored in a config-map: stable/pyar-rewrites/templates/config_map.yaml
 
-To deploy it run: 
+To deploy it run:
 
-```bash 
+```bash
 helm upgrade --install --wait --recreate-pods pyar-rewrites stable/pyar-rewrites
 ```
 
 ## Python Argentina community website.
 http://www.python.org.ar
 
-Keel is upgrading the staging environment for each merge to `master`. 
+Keel is upgrading the staging environment for each merge to `master`.
 
 A merge to master in [pyarweb](https://github.com/PyAr/pyarweb/) is triggering a new docker image build in [dockerhub](https://hub.docker.com/r/pyar/pyarweb/) and a web-hook is triggering Keel.
 
@@ -45,7 +45,7 @@ Production environment is still running in USLA. (manual deploy)
 
 ## Events site (EventoL)
 
-https://eventos.python.org.ar 
+https://eventos.python.org.ar
 
 Events site, using [EventoL](https://github.com/eventoL/eventoL). We use it to host PyDays, PyCon, Pycamp and other events.
 
@@ -60,7 +60,7 @@ helm upgrade --install  --wait --timeout 60000 --values values/production/evento
 [Production](https://admin.ac.python.org.ar)
 
 
-```bash 
+```bash
 helm upgrade --install --wait --timeout 60000 --values values/production/asoc_members.yaml production-admin test/asoc-members
 ```
 
@@ -69,14 +69,14 @@ helm upgrade --install --wait --timeout 60000 --values values/production/asoc_me
 
 Using https://github.com/helm/charts/tree/master/stable/postgresql
 
-### Deploy: 
+### Deploy:
 
-```bash 
+```bash
 helm install --name pgcluster -f values/production/postgres_cluster.yaml stable/postgresql
 ```
 
 
-This cluster is using a PersistentVolumeClaim and a "lock" is created manually in azure to prevent unintensional deletes. 
+This cluster is using a PersistentVolumeClaim and a "lock" is created manually in azure to prevent unintensional deletes.
 Detail about locks: https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-lock-resources
 
 ### Connect to the cluster
@@ -96,3 +96,17 @@ We have to create the databases and users manually
 ## Backups
 
 (not documented)
+
+## Wiki
+
+Using https://github.com/helm/charts/tree/master/testing/wiki
+
+### Deploy
+
+```bash
+helm upgrade --install --wait --timeout 60000 --values values/staging/pyar-wiki.yaml staging-wiki test/pyar-wiki --debug --recreate-pods
+```
+
+```bash
+helm upgrade --install --wait --timeout 60000 --values values/production/pyar-wiki.yaml prod-wiki test/pyar-wiki --debug --recreate-pods
+```
