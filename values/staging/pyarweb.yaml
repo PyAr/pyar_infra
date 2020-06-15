@@ -31,9 +31,15 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/proxy-body-size: 25m
     ingress.kubernetes.io/proxy-body-size: 25m
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
   path: /
   hosts:
     - www.staging.python.org.ar
+  tls:
+    - secretName: tls-secret-staging-pyarweb
+      hosts:
+        - www.staging.python.org.ar
 
 nodeSelector: {}
 
