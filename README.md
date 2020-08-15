@@ -118,5 +118,5 @@ Using https://github.com/helm/charts/tree/master/testing/wiki
 ### Deploy
 
 ```bash
-helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.yaml pyarweb-staging test/pyarweb
+helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.yaml pyarweb-staging test/pyarweb --debug --recreate-pods
 ```
