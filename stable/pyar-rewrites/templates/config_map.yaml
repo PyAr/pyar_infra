@@ -27,7 +27,7 @@ data:
       server {
         listen 80;
         server_name cdpedia.python.org.ar cdpedia.pyar.org.ar cdpedia.python.com.ar;
-        return 301 https://python.org.ar/Proyectos/CDPedia;
+        return 301 https://wiki.python.org.ar/Proyectos/cdpedia/;
       }
 
       server {
