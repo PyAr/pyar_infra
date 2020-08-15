@@ -21,13 +21,13 @@ data:
       server {
         listen 80;
         server_name web.python.org.ar python.org.ar python.com.ar www.python.com.ar pyar.org.ar www.pyar.org.ar python.ar;
-        return 301 http://www.python.org.ar$request_uri;
+        return 301 https://www.python.org.ar$request_uri;
       }
 
       server {
         listen 80;
         server_name cdpedia.python.org.ar cdpedia.pyar.org.ar cdpedia.python.com.ar;
-        return 301 http://python.org.ar/Proyectos/CDPedia;
+        return 301 https://wiki.python.org.ar/Proyectos/cdpedia/;
       }
 
       server {
