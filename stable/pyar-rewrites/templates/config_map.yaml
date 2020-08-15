@@ -42,7 +42,7 @@ data:
       }
       server {
         listen 80;
-        server_name charlas.python.org.ar;
+        server_name charlas.python.org.ar listas.python.org.ar;
         return 301 https://pyar.discourse.group/;
       }
 
