@@ -30,6 +30,18 @@ ingress:
   path: /
   hosts:
     - wiki.staging.python.org.ar
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 25m
+    ingress.kubernetes.io/proxy-body-size: 25m
+  tls:
+    - secretName: tls-secret-staging-wiki
+      hosts:
+        - wiki.staging.python.org.ar
+
 
 nodeSelector: {}
 
