@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: pyar/pyarweb
-  tag: latest
+  tag: prod-0.4.0
   pullPolicy: Always
 
 nameOverride: ""
@@ -35,11 +35,11 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   path: /
   hosts:
-    - www.staging.python.org.ar
+    - www.python.org.ar
   tls:
-    - secretName: tls-secret-staging-pyarweb
+    - secretName: tls-secret-production-pyarweb
       hosts:
-        - www.staging.python.org.ar
+        - www.python.org.ar
 
 nodeSelector: {}
 
@@ -47,11 +47,11 @@ tolerations: []
 
 affinity: {}
 
-secretsName: pyarweb-staging
-secretsFilesName: pyarweb-staging-files
+secretsName: pyarweb-production
+secretsFilesName: pyarweb-production-files
 
 env:
-  DJANGO_CONFIGURATION: Staging
+  DJANGO_CONFIGURATION: Production
   APP_DOMAIN: "*"
-  DJANGO_SETTINGS_MODULE: pyarweb.settings.staging
+  DJANGO_SETTINGS_MODULE: pyarweb.settings.production
   POSTGRES_HOST: pgcluster-postgresql
