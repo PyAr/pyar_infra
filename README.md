@@ -120,3 +120,7 @@ Using https://github.com/helm/charts/tree/master/testing/wiki
 ```bash
 helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.yaml pyarweb-staging test/pyarweb --debug --recreate-pods
 ```
+
+```bash
+helm upgrade --install --wait --timeout 60000 --values values/production/pyarweb.yaml pyarweb-production test/pyarweb --debug --recreate-pods
+```
