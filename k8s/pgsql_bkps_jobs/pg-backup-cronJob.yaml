@@ -45,6 +45,23 @@ spec:
             volumeMounts:
             - mountPath: "/pg_backup"
               name: backup-volume
+          - name: pgsql-backup-pyarweb
+            image: gilgamezh/postgres-backup-container
+            env:
+            - name: PGHOST
+              value: "pgcluster-postgresql"
+            - name: PGDATABASE
+              value: "web_production"
+            - name: PGUSER
+              value: "postgres"
+            - name: PGPASSWORD
+              valueFrom: 
+                secretKeyRef:
+                   name: pgcluster-postgresql
+                   key: postgresql-password
+            volumeMounts:
+            - mountPath: "/pg_backup"
+              name: backup-volume
           volumes:
             - name: backup-volume
               persistentVolumeClaim:
