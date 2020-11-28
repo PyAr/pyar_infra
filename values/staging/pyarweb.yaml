@@ -33,6 +33,8 @@ ingress:
     ingress.kubernetes.io/proxy-body-size: 25m
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+         rewrite /wiki/(.*) $scheme://wiki.python.org.ar/$1 permanent;
   path: /
   hosts:
     - www.staging.python.org.ar
