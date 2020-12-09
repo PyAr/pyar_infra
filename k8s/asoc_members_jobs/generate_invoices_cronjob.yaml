@@ -10,7 +10,7 @@ spec:
         spec:
           restartPolicy: OnFailure
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name-generate-invoices-cron }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
