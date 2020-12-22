@@ -9,48 +9,48 @@ spec:
       template:
         spec:
           restartPolicy: OnFailure
-      containers:
-        - name: {{ .Chart.Name-generate-invoices-cron }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-          {{- range $key, $value := .Values.env }}
-            - name: {{ $key | upper | replace "." "_" }}
-              value: {{ quote $value }}
-          {{- end }}
-          {{- if .Values.secretsName }}
-          {{ include "env.secrets" . | indent 12 }}
-          {{- end }}
-          command:
-            - '/bin/bash'
-            - '-c' 
-            - 'python3 ./manage_and_send_mail.py generate_member_invoices --limit=5'
-          ports:
-            - name: http
-              containerPort: 8000
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /admin/login/
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /admin/login/
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
+          containers:
+            - name: {{ .Chart.Name }}-generate-invoices-cron 
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+              {{- range $key, $value := .Values.env }}
+                - name: {{ $key | upper | replace "." "_" }}
+                  value: {{ quote $value }}
+              {{- end }}
+              {{- if .Values.secretsName }}
+              {{ include "env.secrets" . | indent 16 }}
+              {{- end }}
+              command:
+                - '/bin/bash'
+                - '-c' 
+                - 'python3 ./manage_and_send_mail.py generate_member_invoices --limit=5'
+              ports:
+                - name: http
+                  containerPort: 8000
+                  protocol: TCP
+              livenessProbe:
+                httpGet:
+                  path: /admin/login/
+                  port: http
+              readinessProbe:
+                httpGet:
+                  path: /admin/login/
+                  port: http
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              volumeMounts:
+                - name: secrets-files
+                  mountPath: "/etc/secrets"
+                  readOnly: true
+          volumes:
             - name: secrets-files
-              mountPath: "/etc/secrets"
-              readOnly: true
-      volumes:
-        - name: secrets-files
-          secret:
-            secretName: {{ .Values.secretsFilesName }}
-            items:
-            - key: afip_pyar_crt
-              path: afip_pyar.crt
-            - key: afip_pyar_key
-              path: afip_pyar.key
-            - key: gdrive
-              path: gdrive.json
+              secret:
+                secretName: {{ .Values.secretsFilesName }}
+                items:
+                - key: afip_pyar_crt
+                  path: afip_pyar.crt
+                - key: afip_pyar_key
+                  path: afip_pyar.key
+                - key: gdrive
+                  path: gdrive.json
