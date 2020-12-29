@@ -25,18 +25,6 @@ spec:
                 - '/bin/bash'
                 - '-c' 
                 - 'python3 ./manage_and_send_mail.py generate_member_invoices --limit=5'
-              ports:
-                - name: http
-                  containerPort: 8000
-                  protocol: TCP
-              livenessProbe:
-                httpGet:
-                  path: /admin/login/
-                  port: http
-              readinessProbe:
-                httpGet:
-                  path: /admin/login/
-                  port: http
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
               volumeMounts:
