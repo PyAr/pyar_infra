@@ -2,16 +2,16 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "asoc-members.fullname" . }}-generate-invoices-cron
+  name: {{ include "asoc-members.fullname" . }}-get-mercadopago-cron
 spec:
-  schedule: "15 11 * * *"
+  schedule: "15 10 * * *"
   jobTemplate:
     spec:
       template:
         spec:
           restartPolicy: OnFailure
           containers:
-            - name: {{ .Chart.Name }}-generate-invoices-cron 
+            - name: {{ .Chart.Name }}-get-mercadopago-cron 
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               env:
@@ -25,7 +25,7 @@ spec:
               command:
                 - '/bin/bash'
                 - '-c' 
-                - 'python3 ./manage_and_send_mail.py generate_member_invoices --limit=5'
+                - 'python3 ./manage_and_send_mail.py get_mercadopago_payments'
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
               volumeMounts:
