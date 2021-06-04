@@ -124,3 +124,13 @@ helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.ya
 ```bash
 helm upgrade --install --wait --timeout 60000 --values values/production/pyarweb.yaml pyarweb-production test/pyarweb --debug --recreate-pods
 ```
+
+### Planeta 
+
+```bash
+helm upgrade --install --wait --timeout 60000 --values values/staging/planeta-pyar.yaml staging-planeta test/planeta-pyar --debug --recreate-pods
+```
+
+```bash
+helm upgrade --install --wait --timeout 60000 --values values/production/planeta-pyar.yaml prod-planeta test/planeta-pyar --debug --recreate-pods
+```
