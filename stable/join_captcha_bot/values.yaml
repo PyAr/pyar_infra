@@ -1,0 +1,51 @@
+# Default values for join_captcha_bot.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: pyar/captcha-bot
+  tag: latest
+  pullPolicy: IfNotPresent
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+secretsName: captcha-bot-production
+
+env:
+  CAPTCHABOT_INIT_CAPTCHA_TIME_MIN: 2
+  CAPTCHABOT_INIT_LANG: "ES"
+  CAPTCHABOT_OWNER: "@Gilgamezh"
+  CAPTCHABOT_PRIVATE: true
+  CAPTCHABOT_T_DEL_MSG: 2
+  CAPTCHABOT_T_DEL_WELCOME_MSG: 3
