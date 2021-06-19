@@ -16,7 +16,7 @@ data:
       server {  
         listen 80; 
         server_name ar.pycon.org www.pycon.com.ar pycon.com.ar pycon.python.com.ar pyconar.python.org.ar pycon.ar;
-        return 301 http://pycon.python.org.ar; 
+        return 301 https://eventos.python.org.ar/events/pyconar2021/; 
       } 
       server {
         listen 80;
