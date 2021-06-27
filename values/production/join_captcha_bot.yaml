@@ -1,0 +1,46 @@
+replicaCount: 1
+
+image:
+  repository: pyar/captcha-bot
+  tag: latest
+  pullPolicy: IfNotPresent
+  pullPolicy: Always
+
+imagePullSecrets: []
+nameOverride: "captcha-bot-production"
+fullnameOverride: "captcha-bot-production"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "captcha-bot"
+
+podSecurityContext: {}
+
+securityContext: {}
+ 
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+secretsName: captcha-bot-production
+
+env:
+  CAPTCHABOT_INIT_CAPTCHA_TIME_MIN: 2
+  CAPTCHABOT_INIT_LANG: "ES"
+  CAPTCHABOT_OWNER: "@Gilgamezh"
+  CAPTCHABOT_PRIVATE: 1
+  CAPTCHABOT_T_DEL_MSG: 2
+  CAPTCHABOT_T_DEL_WELCOME_MSG: 3
