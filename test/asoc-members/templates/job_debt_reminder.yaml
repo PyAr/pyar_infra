@@ -1,0 +1,46 @@
+{{- if .Values.cronEnabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "asoc-members.fullname" . }}-debt-reminder-cron
+spec:
+  schedule: "7 28 14 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: {{ .Chart.Name }}-debt-reminder-cron 
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+              {{- range $key, $value := .Values.env }}
+                - name: {{ $key | upper | replace "." "_" }}
+                  value: {{ quote $value }}
+              {{- end }}
+              {{- if .Values.secretsName }}
+              {{ include "env.secrets" . | indent 16 }}
+              {{- end }}
+              command:
+                - '/bin/bash'
+                - '-c' 
+                - 'python3 ./manage_and_send_mail.py send_debt_reminder_mails'
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+              volumeMounts:
+                - name: secrets-files
+                  mountPath: "/etc/secrets"
+                  readOnly: true
+          volumes:
+            - name: secrets-files
+              secret:
+                secretName: {{ .Values.secretsFilesName }}
+                items:
+                - key: afip_pyar_crt
+                  path: afip_pyar.crt
+                - key: afip_pyar_key
+                  path: afip_pyar.key
+                - key: gdrive
+                  path: gdrive.json
+{{- end }}
