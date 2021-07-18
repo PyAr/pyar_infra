@@ -19,11 +19,11 @@ service:
 
 resources:
   limits:
-    cpu: 1
-    memory: 1Gi
+    cpu: 50m
+    memory: 256mb
   requests:
-    cpu: 200m
-    memory: 512Mi
+    cpu: 20m
+    memory: 128mb
 
 ingress:
   enabled: true
