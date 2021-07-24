@@ -20,10 +20,10 @@ service:
 resources:
   limits:
     cpu: 50m
-    memory: 256mb
+    memory: 256Mi
   requests:
     cpu: 20m
-    memory: 128mb
+    memory: 128Mi
 
 ingress:
   enabled: true
