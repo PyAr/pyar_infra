@@ -52,7 +52,13 @@ Events site, using [EventoL](https://github.com/eventoL/eventoL). We use it to h
 [Production:](https://eventos.python.org.ar)
 
 ```bash
-helm upgrade --install  --wait --timeout 60000 --values values/production/eventol.yaml production-eventos test/eventol
+helm upgrade --install  --wait --timeout 60000 --values values/production/eventol.yaml production-eventos stable/eventol
+```
+
+[Staging:]
+
+```bash
+helm upgrade --install  --wait --timeout 60000 --values values/staging/eventol.yaml staging-eventos stable/eventol
 ```
 
 ## Asociación Civil administration. (asoc_members)
@@ -125,7 +131,7 @@ helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.ya
 helm upgrade --install --wait --timeout 60000 --values values/production/pyarweb.yaml pyarweb-production test/pyarweb --debug --recreate-pods
 ```
 
-### Planeta 
+## Planeta 
 
 ```bash
 helm upgrade --install --wait --timeout 60000 --values values/staging/planeta-pyar.yaml staging-planeta test/planeta-pyar --debug --recreate-pods

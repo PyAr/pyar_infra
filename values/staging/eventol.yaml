@@ -33,10 +33,11 @@ secretsName: eventol-staging
 
 env: 
   DJANGO_CONFIGURATION: Pyar
-  REDIS_HOST: eventos-staging-redis-master
+  REDIS_HOST: staging-eventos-redis-master
   EMAIL_FROM: donotreply@python.org.ar
   DEFAULT_FROM_EMAIL: donotreply@python.org.ar
   EMAIL_BACKEND: 'django.core.mail.backends.smtp.EmailBackend'
+  PSQL_HOST: pgcluster-postgresql
 
 mediafiles:
   path: /usr/src/app/eventol/media
