@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   name: {{ include "asoc-members.fullname" . }}-debt-reminder-cron
 spec:
-  schedule: "7 28 14 * *"
+  schedule: "7 18 14 * *"
   jobTemplate:
     spec:
       template:
