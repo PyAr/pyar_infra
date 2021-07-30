@@ -5,7 +5,7 @@ data:
       worker_connections  1024;
     }
     http {
-
+      # infrastructure related
       server {
         listen 80 default_server;
         location /nginx-health {
@@ -13,33 +13,50 @@ data:
           return 200 "healthy\n";
         }
       }
+
+      # these will translate all secondary domains into the main one
+      server {
+          server_name ~^(?<subdomain>.*)\.python\.ar$ ~^(?<subdomain>.*)\.python\.com\.ar$  ~^(?<subdomain>.*)\.pyar\.org\.ar$;
+          location / {
+              rewrite ^ https://$subdomain.python.org.ar$request_uri permanent;
+          }
+      }
+      server {
+          server_name python.ar python.com.ar pyar.org.ar;
+          location / {
+              rewrite ^ https://www.python.org.ar$request_uri permanent;
+          }
+      }
+
+      # PyCon Argentina
       server {  
         listen 80; 
-        server_name ar.pycon.org www.pycon.com.ar pycon.com.ar pycon.python.com.ar pyconar.python.org.ar pycon.ar;
+        server_name ar.pycon.org www.pycon.com.ar pycon.com.ar pyconar.python.org.ar pycon.ar;
         return 301 https://eventos.python.org.ar/events/pyconar2021/; 
       } 
+
+      # Main site
       server {
         listen 80;
-        server_name web.python.org.ar python.org.ar python.com.ar www.python.com.ar pyar.org.ar www.pyar.org.ar python.ar;
+        server_name web.python.org.ar python.org.ar;
         return 301 https://www.python.org.ar$request_uri;
       }
 
+      # Planeta
       server {
         listen 80;
-        server_name cdpedia.python.org.ar cdpedia.pyar.org.ar cdpedia.python.com.ar;
-        return 301 https://wiki.python.org.ar/Proyectos/cdpedia/;
-      }
-
-      server {
-        listen 80;
-        server_name planeta.python.com.ar planet.python.com.ar planet.python.org.ar;
+        server_name planet.python.org.ar;
         return 301 http://planeta.python.org.ar/;
       }
+
+      # Diversidad
       server {
         listen 80;
         server_name diversidad.python.org.ar;
         return 301 https://ac.python.org.ar/diversidad/index.html;
       }
+
+      # Foro Discourse
       server {
         listen 80;
         server_name charlas.python.org.ar listas.python.org.ar;
