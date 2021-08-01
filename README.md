@@ -88,6 +88,7 @@ export POSTGRES_PASSWORD=$(kubectl get secret --namespace default pgcluster-post
 kubectl run pgcluster-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.4.0-debian-9-r34 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host pgcluster-postgresql -U postgres -p 5432
 ```
 
+
 ###  Configuration
 
 We have to create the databases and users manually
@@ -95,7 +96,26 @@ We have to create the databases and users manually
 
 ## Backups
 
-(not documented)
+### Restore backups
+
+1. Download the Backup file from Azure Blob Storage
+1. Create a console to the PostgreSQL cluster
+```bash
+# get the password
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace default pgcluster-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+# connect
+kubectl run pgcluster-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.4.0-debian-9-r34 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- /bin/bash
+```
+
+1. On a new local console, copy the local downloaded file to the cluster
+```bash
+kubectl cp foo.dump pgcluster-postgresql-client:/tmp/backup
+```
+
+1. On the existing console to the PostgreSQL cluster run the restore command. Change the `CHANGE_THE_DATABASE` for the correct value
+```bash
+I have no name!@pgcluster-postgresql-client:/$ pg_restore --host pgcluster-postgresql -U postgres -p 5432 -U postgres -d CHANGE_THE_DATABASE /tmp/backup
+```
 
 ## Wiki
 
