@@ -6,8 +6,8 @@ replicaCount: 1
 workerReplicaCount: 1
 
 image:
-  repository: gilgamezh/eventol
-  tag: pyconar-0.6.4
+  repository: eventol/eventol
+  tag: latest
   pullPolicy: Always
 
 service:
@@ -50,12 +50,13 @@ affinity: {}
 secretsName: eventol-staging
 
 env: 
-  DJANGO_CONFIGURATION: Pyar
+  DJANGO_CONFIGURATION: Staging
   REDIS_HOST: staging-eventos-redis-master
   EMAIL_FROM: donotreply@python.org.ar
   DEFAULT_FROM_EMAIL: donotreply@python.org.ar
   EMAIL_BACKEND: 'django.core.mail.backends.smtp.EmailBackend'
   PSQL_HOST: pgcluster-postgresql
+  APP_DNS: '*'
 
 mediafiles:
   path: /usr/src/app/eventol/media
