@@ -28,39 +28,11 @@ data:
           }
       }
 
-      # PyCon Argentina
-      server {  
-        listen 80; 
-        server_name ar.pycon.org www.pycon.com.ar pycon.com.ar pyconar.python.org.ar pycon.ar;
-        return 301 https://eventos.python.org.ar/events/pyconar2021/; 
-      } 
-
       # Main site
       server {
         listen 80;
         server_name web.python.org.ar python.org.ar;
         return 301 https://www.python.org.ar$request_uri;
-      }
-
-      # Planeta
-      server {
-        listen 80;
-        server_name planet.python.org.ar;
-        return 301 http://planeta.python.org.ar/;
-      }
-
-      # Diversidad
-      server {
-        listen 80;
-        server_name diversidad.python.org.ar;
-        return 301 https://ac.python.org.ar/diversidad/index.html;
-      }
-
-      # Foro Discourse
-      server {
-        listen 80;
-        server_name charlas.python.org.ar listas.python.org.ar;
-        return 301 https://pyar.discourse.group/;
       }
 
     }
