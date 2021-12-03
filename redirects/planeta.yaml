@@ -1,0 +1,22 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: redirect-planeta
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/permanent-redirect: https://planeta.python.org.ar/
+spec:
+  tls:
+    - hosts:
+        - planet.python.org.ar
+        - planet.python.ar
+        - planet.python.com.ar
+        - planet.pyar.org.ar
+      secretName: planeta-tls-secret
+  rules:
+    - host: planet.python.org.ar
+    - host: planet.python.ar
+    - host: planet.python.com.ar
+    - host: planet.pyar.org.ar

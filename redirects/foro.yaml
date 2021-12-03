@@ -1,0 +1,30 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: redirect-foro
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/permanent-redirect: https://pyar.discourse.group/
+spec:
+  tls:
+    - hosts:
+        - charlas.python.org.ar
+        - charlas.python.ar
+        - charlas.python.com.ar
+        - charlas.pyar.org.ar
+        - listas.python.org.ar
+        - listas.python.ar
+        - listas.python.com.ar
+        - listas.pyar.org.ar
+      secretName: foro-tls-secret
+  rules:
+    - host: charlas.python.org.ar
+    - host: charlas.python.ar
+    - host: charlas.python.com.ar
+    - host: charlas.pyar.org.ar
+    - host: listas.python.org.ar
+    - host: listas.python.ar
+    - host: listas.python.com.ar
+    - host: listas.pyar.org.ar

@@ -1,0 +1,22 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: redirect-diversidad
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/permanent-redirect: https://ac.python.org.ar/diversidad/index.html
+spec:
+  tls:
+    - hosts:
+        - diversidad.python.org.ar
+        - diversidad.python.ar
+        - diversidad.python.com.ar
+        - diversidad.pyar.org.ar
+      secretName: diversidad-tls-secret
+  rules:
+    - host: diversidad.python.org.ar
+    - host: diversidad.python.ar
+    - host: diversidad.python.com.ar
+    - host: diversidad.pyar.org.ar

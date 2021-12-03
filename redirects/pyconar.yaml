@@ -1,0 +1,30 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: redirect-pyconar
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/temporal-redirect: https://eventos.python.org.ar/events/pyconar2021/
+spec:
+  tls:
+    - hosts:
+        - ar.pycon.org
+        - pycon.com.ar
+        - www.pycon.com.ar
+        - pycon.ar
+        - pyconar.python.org.ar
+        - pyconar.python.ar
+        - pyconar.python.com.ar
+        - pyconar.pyar.org.ar
+      secretName: pyconar-tls-secret
+  rules:
+    - host: ar.pycon.org
+    - host: pycon.com.ar
+    - host: www.pycon.com.ar
+    - host: pycon.ar
+    - host: pyconar.python.org.ar
+    - host: pyconar.python.ar
+    - host: pyconar.python.com.ar
+    - host: pyconar.pyar.org.ar
