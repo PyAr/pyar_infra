@@ -49,11 +49,7 @@ https://eventos.python.org.ar
 
 Events site, using [EventoL](https://github.com/eventoL/eventoL). We use it to host PyDays, PyCon, Pycamp and other events.
 
-[Production:](https://eventos.python.org.ar)
 
-```bash
-helm upgrade --install  --wait --timeout 60000 --values values/production/eventol.yaml production-eventos stable/eventol
-```
 
 ### Staging
 
@@ -73,10 +69,34 @@ $ docker cp CONTAINER_ID:/usr/src/app/eventol/static .
 az storage copy -s static -d 'https://pyareventol.file.core.windows.net/eventol-static/' --recursive
 ```
 
-[Staging:]
+3. Deploy to [Staging:]
 
 ```bash
 helm upgrade --install  --wait --timeout 60000 --values values/staging/eventol.yaml staging-eventos stable/eventol
+```
+
+### Produccion
+
+
+
+1. Get the static files from the docker image (the version might change. Check the values/production/eventol.yaml file)
+```
+$ docker run --name eventol -it eventol/eventol:version-2.2.2 /bin/ash
+$ docker ps
+CONTAINER ID   IMAGE             COMMAND      CREATED          STATUS              PORTS      NAMES
+2e88bd843642   eventol/eventol   "/bin/ash"   41 seconds ago   Up About a minute   8000/tcp   eventol
+$ docker cp CONTAINER_ID:/usr/src/app/eventol/static .
+```
+
+
+2. Upload the static files to Azure Storage
+```
+az storage copy -s static -d 'https://pyareventol.file.core.windows.net/eventol-static/' --recursive
+```
+
+3. Deploy to [Production:](https://eventos.python.org.ar)
+```bash
+helm upgrade --install  --wait --timeout 60000 --values values/production/eventol.yaml production-eventos stable/eventol
 ```
 
 ## Asociación Civil administration. (asoc_members)
