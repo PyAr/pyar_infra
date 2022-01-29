@@ -91,7 +91,7 @@ $ docker cp CONTAINER_ID:/usr/src/app/eventol/static .
 
 2. Upload the static files to Azure Storage
 ```
-az storage copy -s static -d 'https://pyareventol.file.core.windows.net/eventol-static/' --recursive
+az storage copy -s static -d 'https://pyareventol.file.core.windows.net/eventol-prod-static/' --recursive
 ```
 
 3. Deploy to [Production:](https://eventos.python.org.ar)
