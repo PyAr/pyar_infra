@@ -43,6 +43,8 @@ ingress:
         - wiki.staging.python.org.ar
 
 
+secretsName: wiki-staging
+
 nodeSelector: {}
 
 tolerations: []

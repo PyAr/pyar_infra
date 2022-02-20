@@ -42,6 +42,8 @@ ingress:
       hosts:
         - wiki.python.org.ar
 
+secretsName: wiki-production
+
 nodeSelector: {}
 
 tolerations: []
