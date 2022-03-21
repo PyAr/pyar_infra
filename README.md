@@ -105,7 +105,7 @@ helm upgrade --install  --wait --timeout 60000 --values values/production/evento
 
 
 ```bash
-helm upgrade --install --wait --timeout 60000 --values values/production/asoc_members.yaml production-admin test/asoc-members
+helm upgrade --install --wait --timeout 60000 --values values/production/asoc_members.yaml production-admin stable/asoc-members
 ```
 
 
@@ -168,11 +168,11 @@ Using https://github.com/helm/charts/tree/master/testing/wiki
 ### Deploy
 
 ```bash
-helm upgrade --install --wait --timeout 60000 --values values/staging/pyar-wiki.yaml staging-wiki test/pyar-wiki --debug --recreate-pods
+helm upgrade --install --wait --timeout 60000 --values values/staging/pyar-wiki.yaml staging-wiki stable/pyar-wiki --debug --recreate-pods
 ```
 
 ```bash
-helm upgrade --install --wait --timeout 60000 --values values/production/pyar-wiki.yaml prod-wiki test/pyar-wiki --debug --recreate-pods
+helm upgrade --install --wait --timeout 60000 --values values/production/pyar-wiki.yaml prod-wiki stable/pyar-wiki --debug --recreate-pods
 ```
 
 ## Web
@@ -182,11 +182,11 @@ Using https://github.com/helm/charts/tree/master/testing/wiki
 ### Deploy
 
 ```bash
-helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.yaml pyarweb-staging test/pyarweb --debug --recreate-pods
+helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.yaml pyarweb-staging stable/pyarweb --debug --recreate-pods
 ```
 
 ```bash
-helm upgrade --install --wait --timeout 60000 --values values/production/pyarweb.yaml pyarweb-production test/pyarweb --debug --recreate-pods
+helm upgrade --install --wait --timeout 60000 --values values/production/pyarweb.yaml pyarweb-production stable/pyarweb --debug --recreate-pods
 ```
 
 ## Planeta 
