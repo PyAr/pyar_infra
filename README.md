@@ -54,9 +54,9 @@ Events site, using [EventoL](https://github.com/eventoL/eventoL). We use it to h
 ### Staging
 
 
-1. Get the static files from the docker image
+1. Get the static files from the docker image (the version might change. Check the values/staging/eventol.yaml file)
 ```
-$ docker run --name eventol -it eventol/eventol /bin/ash
+$ docker run --name eventol -it registry.gitlab.com/eventol/eventol/releases:v2.3.2 /bin/ash
 $ docker ps
 CONTAINER ID   IMAGE             COMMAND      CREATED          STATUS              PORTS      NAMES
 2e88bd843642   eventol/eventol   "/bin/ash"   41 seconds ago   Up About a minute   8000/tcp   eventol
@@ -66,6 +66,7 @@ $ docker cp CONTAINER_ID:/usr/src/app/eventol/static .
 
 2. Upload the static files to Azure Storage
 ```
+cd static
 az storage copy -s static -d 'https://pyareventol.file.core.windows.net/eventol-static/' --recursive
 ```
 
@@ -81,7 +82,7 @@ helm upgrade --install  --wait --timeout 60000 --values values/staging/eventol.y
 
 1. Get the static files from the docker image (the version might change. Check the values/production/eventol.yaml file)
 ```
-$ docker run --name eventol -it eventol/eventol:version-2.2.2 /bin/ash
+$ docker run --name eventol -it registry.gitlab.com/eventol/eventol/releases:v2.3.2 /bin/ash
 $ docker ps
 CONTAINER ID   IMAGE             COMMAND      CREATED          STATUS              PORTS      NAMES
 2e88bd843642   eventol/eventol   "/bin/ash"   41 seconds ago   Up About a minute   8000/tcp   eventol
@@ -90,7 +91,8 @@ $ docker cp CONTAINER_ID:/usr/src/app/eventol/static .
 
 
 2. Upload the static files to Azure Storage
-```
+```|
+cd static
 az storage copy -s static -d 'https://pyareventol.file.core.windows.net/eventol-prod-static/' --recursive
 ```
 
