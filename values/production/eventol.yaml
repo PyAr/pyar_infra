@@ -6,8 +6,8 @@ replicaCount: 2
 workerReplicaCount: 1
 
 image:
-  repository: eventol/eventol
-  tag: version-2.2.2
+  repository: registry.gitlab.com/eventol/eventol/releases
+  tag: v2.3.2
   pullPolicy: Always
 
 resources:
