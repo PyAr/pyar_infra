@@ -7,7 +7,7 @@ workerReplicaCount: 1
 
 image:
   repository: registry.gitlab.com/eventol/eventol/releases
-  tag: v2.3.2
+  tag: v2.3.3
   pullPolicy: Always
 
 resources:
@@ -53,6 +53,7 @@ env:
   EMAIL_BACKEND: 'django.core.mail.backends.smtp.EmailBackend'
   PSQL_HOST: pgcluster-postgresql
   APP_DNS: '*'
+  DONT_SET_FILE_UPLOAD_PERMISSIONS: 'true'
 
 mediafiles:
   path: /usr/src/app/eventol/media

@@ -7,7 +7,7 @@ workerReplicaCount: 1
 
 image:
   repository: registry.gitlab.com/eventol/eventol/releases
-  tag: v2.3.2
+  tag: v2.3.3
   pullPolicy: Always
  
 
@@ -57,6 +57,7 @@ env:
   DEFAULT_FROM_EMAIL: donotreply@python.org.ar
   EMAIL_BACKEND: 'django.core.mail.backends.smtp.EmailBackend'
   PSQL_HOST: pgcluster-postgresql
+  DONT_SET_FILE_UPLOAD_PERMISSIONS: 'true'
   APP_DNS: '*'
 
 mediafiles:

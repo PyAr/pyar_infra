@@ -9,6 +9,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.workerReplicaCount }}
+  securityContext:
+    fsGroup: 100
   selector:
     matchLabels:
       app: {{ template "eventol.name" . }}-worker

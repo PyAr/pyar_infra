@@ -9,6 +9,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  securityContext:  
+    fsGroup: 100
   selector:
     matchLabels:
       app: {{ template "eventol.name" . }}
@@ -37,7 +39,7 @@ spec:
               protocol: TCP
           volumeMounts:
           - name: mediafiles
-            mountPath: {{ .Values.mediafiles.path }}
+            mountPath: {{ .Values.mediafiles.path }}            
           - name: nginx-proxy-config
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
