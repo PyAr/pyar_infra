@@ -57,3 +57,4 @@ env:
   APP_DOMAIN: "*"
   DJANGO_SETTINGS_MODULE: pyarweb.settings.staging
   POSTGRES_HOST: pgcluster-postgresql
+  BASE_URL: www.staging.python.org.ar
