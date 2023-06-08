@@ -6,9 +6,10 @@ replicaCount: 1
 workerReplicaCount: 1
 
 image:
-  repository: eventol/eventol
-  tag: latest
+  repository: registry.gitlab.com/eventol/eventol/releases
+  tag: v2.3.3
   pullPolicy: Always
+ 
 
 service:
   type: LoadBalancer
@@ -56,6 +57,7 @@ env:
   DEFAULT_FROM_EMAIL: donotreply@python.org.ar
   EMAIL_BACKEND: 'django.core.mail.backends.smtp.EmailBackend'
   PSQL_HOST: pgcluster-postgresql
+  DONT_SET_FILE_UPLOAD_PERMISSIONS: 'true'
   APP_DNS: '*'
 
 mediafiles:
