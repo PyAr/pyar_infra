@@ -1,47 +1,127 @@
-# PyAr infrastructure
-Python Argentina Infrastructure
+# Python Argentina Infrastructure
+
 This is the repository with all the code and documentation to handle PyAr infrastructure
 
+We are working with [kubernetes](http://kubernetes.io/) in Azure [aks](https://docs.microsoft.com/en-us/azure/aks/)
 
-[![join our chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://pyar.zulipchat.com/#streams/200416/Infra)
-
-Our infrastructure have been hosted by [USLA](http://drupal.usla.org.ar/) for long time.
-
-Currently we are migrating to [kubernetes](http://kubernetes.io/) in Azure [aks](https://docs.microsoft.com/en-us/azure/aks/)
-
-We use [Helm](https://www.helm.sh/) as a package manager and [Keel](https://keel.sh/) for continuous delivery.
+We use [Helm](https://www.helm.sh/) as a package manager.
 
 [Step-by-step guide to deploy de cluster](docs/k8s.md)
 
-### HTTPS config
+
+## HTTPS config
 
 We are using HTTPS with [Let's Encrypt](https://letsencrypt.org/)
 
 Settings details at: https://docs.microsoft.com/en-us/azure/aks/ingress
 
-### Redirecter.
+
+## Redirecter.
 
 We have lot of domains. But python.org.ar is our principal.
 
-To handle redirects from other domains we are using a nginx server. This server is handlign `redirecter.python.org.ar`
-All domains except python.org.ar are pointing to it.
+To handle redirects from other domains we have two models:
 
-Nginx configuration is stored in a config-map: stable/pyar-rewrites/templates/config_map.yaml
+1. nginx ingress rules, different services configured with files in the `redirects` directory
 
-To deploy it run:
+    - first time:
+    
+        kubectl create -f redirects/prueba.yaml
+
+    - after any change:
+
+        kubectl apply -f redirects/prueba.yaml
+
+    - to see what's there:
+
+        kubectl get pods --namespace=ingress-basic
+
+2. nginx server, handling `redirecter.python.org.ar`, the configuration is stored in a config-map: `stable/pyar-rewrites/templates/config_map.yaml`, to deploy it run:
 
 ```bash
-helm upgrade --install --wait --recreate-pods pyar-rewrites stable/pyar-rewrites
+helm upgrade --install --wait pyar-rewrites stable/pyar-rewrites
 ```
 
-## Python Argentina community website.
+
+## The Database, a PostgreSQL cluster
+
+Using https://github.com/helm/charts/tree/master/stable/postgresql
+
+
+### Deploy:
+
+El siguiente comando hace el deploy. NOTA: NO tiene que estar el secreto `pgcluster-postgresql` al momento de deployar PSQL (se crea en ese proceso).
+
+```bash
+helm upgrade --install --wait -f values/production/postgres_cluster.yaml pgcluster oci://registry-1.docker.io/bitnamicharts/postgresql
+```
+
+This cluster is using a PersistentVolumeClaim and a "lock" is created manually in azure to prevent unintencional deletes. Detail about locks: https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-lock-resources
+
+
+### Connect to the cluster
+
+```bash
+# get the password
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace default pgcluster-postgresql -o jsonpath="{.data.postgres-password}" | base64 --decode)
+# connect
+kubectl run pgcluster-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.5.0-debian-9-r84 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host pgcluster-postgresql -U postgres -p 5432
+```
+
+
+###  Configuration
+
+We have to create the databases and users manually
+
+
+### Restore backups
+
+1. Download the Backup file from Azure Blob Storage
+1. Create a console to the PostgreSQL cluster
+```bash
+# get the password
+export POSTGRES_PASSWORD=$(kubectl get secret --namespace default pgcluster-postgresql -o jsonpath="{.data.postgres-password}" | base64 --decode)
+# connect
+kubectl run pgcluster-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.5.0-debian-9-r84 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- /bin/bash
+```
+
+1. On a new local console, copy the local downloaded file to the cluster
+```bash
+kubectl cp *.dump pgcluster-postgresql-client:/tmp/backup
+```
+
+1. On the existing console to the PostgreSQL cluster run the restore command. Change the `CHANGE_THE_DATABASE` for the correct value
+```bash
+I have no name!@pgcluster-postgresql-client:/$ pg_restore --host pgcluster-postgresql -U postgres --d CHANGE_THE_DATABASE /tmp/backup
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Python Argentina community website
+
 http://www.python.org.ar
 
-Keel is upgrading the staging environment for each merge to `master`.
+```bash
+helm upgrade --install --wait --timeout 60000s --values values/production/pyarweb.yaml pyarweb-production stable/pyarweb
+```
 
-A merge to master in [pyarweb](https://github.com/PyAr/pyarweb/) is triggering a new docker image build in [dockerhub](https://hub.docker.com/r/pyar/pyarweb/) and a web-hook is triggering Keel.
 
-Production environment is still running in USLA. (manual deploy)
+
+--
+
+
 
 ## Events site (EventoL)
 
@@ -111,57 +191,6 @@ helm upgrade --install --wait --timeout 60000 --values values/production/asoc_me
 ```
 
 
-## PostgreSQL cluster:
-
-Using https://github.com/helm/charts/tree/master/stable/postgresql
-
-### Deploy:
-
-```bash
-helm install --name pgcluster -f values/production/postgres_cluster.yaml stable/postgresql
-```
-
-
-This cluster is using a PersistentVolumeClaim and a "lock" is created manually in azure to prevent unintensional deletes.
-Detail about locks: https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-lock-resources
-
-### Connect to the cluster
-
-```bash
-# get the password
-export POSTGRES_PASSWORD=$(kubectl get secret --namespace default pgcluster-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
-# connect
-kubectl run pgcluster-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.4.0-debian-9-r34 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host pgcluster-postgresql -U postgres -p 5432
-```
-
-
-###  Configuration
-
-We have to create the databases and users manually
-
-
-## Backups
-
-### Restore backups
-
-1. Download the Backup file from Azure Blob Storage
-1. Create a console to the PostgreSQL cluster
-```bash
-# get the password
-export POSTGRES_PASSWORD=$(kubectl get secret --namespace default pgcluster-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode)
-# connect
-kubectl run pgcluster-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:11.4.0-debian-9-r34 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- /bin/bash
-```
-
-1. On a new local console, copy the local downloaded file to the cluster
-```bash
-kubectl cp foo.dump pgcluster-postgresql-client:/tmp/backup
-```
-
-1. On the existing console to the PostgreSQL cluster run the restore command. Change the `CHANGE_THE_DATABASE` for the correct value
-```bash
-I have no name!@pgcluster-postgresql-client:/$ pg_restore --host pgcluster-postgresql -U postgres -p 5432 -U postgres -d CHANGE_THE_DATABASE /tmp/backup
-```
 
 ## Wiki
 

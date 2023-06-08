@@ -11,22 +11,22 @@
 ## Crear el cluster de k8s
 
 ```bash 
-az aks create -g pyar-infra -n flying-circus-v2 \
-                --node-count 3 \
+az aks create -g pyar-infra -n flying-circus-v3 \
+                --node-count 4 \
                 --node-vm-size Standard_B2s \
-                -k 1.13.5 \
+                -k 1.26.3 \
                 --dns-name-prefix flying-circus-v2 \
                 -l eastus \
                 --ssh-key-value .ssh/id_rsa_mail@gilgamezh.me.pub 
 ```
 
-Esto va a deployar Kubernetes con 3 nodos en la versión 1.11.1. 
+Esto va a deployar Kubernetes con 4 nodos en la versión 1.26.3. 
 El tamaño de las VMs y la zona las seleccioné buscando la combinación más económica en [azureprice](https://azureprice.net/).
 
 Una vez creado el cluster hay que configurar `kubectl` para que se conecte: 
 
 ```bash 
-az aks get-credentials --resource-group pyar-infra --name flying-circus-v2
+az aks get-credentials --resource-group pyar-infra --name flying-circus-v3
 ```
 
 Testear ejecutando 
@@ -37,25 +37,11 @@ kubectl get nodes
 
 ## Instalar Helm 
 
-`helm init`
+Local en tu máquina, instrucciones:
 
-### Configurar permisos (RBAC) para Tiller (helm server side)
+   https://helm.sh/docs/intro/install/ 
 
-
-More at: https://helm.sh/docs/using_helm/#role-based-access-control
-
-```bash 
-# create service account
-kubectl create serviceaccount tiller --namespace kube-system
-# create ClusterRoleBinding 
-kubectl create -f k8s/tiller-clusterrolebinding.yaml
-# upgrade helm 
-helm init --service-account tiller --upgrade
-# test it 
-helm ls
-```
-
-## crear secretos 
+## Crear secretos 
 
 >  (:warning: no están en el repo)
 
@@ -80,64 +66,74 @@ kubectl apply -f /path/to/secrets/files/
 
 Detalles en: https://docs.microsoft.com/en-us/azure/aks/ingress
 
-
-- crear namespace 
-`kubectl create namespace ingress-basic`
-
-- instalar nginx-ingress 
-
-```bash 
-helm install stable/nginx-ingress \
-    --name production-nginx-ingress \
-    --namespace ingress-basic \
-    --set controller.replicaCount=2 \
-    -f values/production/nginx-ingress.yaml\
-```
-
-- opcional, ejecutar este paso: https://docs.microsoft.com/en-us/azure/aks/ingress-tls#configure-a-dns-name
-
-
-- instalar cert-manager 
+- crear un controlador ingress
 
 ```bash
-# Install the CustomResourceDefinition resources separately
-kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.8/deploy/manifests/00-crds.yaml
+NAMESPACE=ingress-basic
 
-# Create the namespace for cert-manager
-kubectl create namespace cert-manager
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
 
-# Label the cert-manager namespace to disable resource validation
-kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+  --create-namespace \
+  --namespace $NAMESPACE \
+  --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
+```
 
-# Add the Jetstack Helm repository
+- ver cómo quedó: `kubectl --namespace ingress-basic get services -o wide -w ingress-nginx-controller`
+
+    NOTA: la IP pública que muestra acá es la que tenemos que apuntar desde Cloudflare en la entrada `k8s_ingress` en `python.org.ar`
+
+- crear un container registry (ACR)
+
+```bash
+REGISTRY_NAME=pyaracr
+az acr create -n $REGISTRY_NAME -g pyar-infra --sku basic
+az aks update -n flying-circus-v3 -g pyar-infra --attach-acr $REGISTRY_NAME
+```
+
+- para habilitar TLS con Let's Encrypt:
+
+```bash
+CERT_MANAGER_REGISTRY=quay.io
+CERT_MANAGER_TAG=v1.8.0
+CERT_MANAGER_IMAGE_CONTROLLER=jetstack/cert-manager-controller
+CERT_MANAGER_IMAGE_WEBHOOK=jetstack/cert-manager-webhook
+CERT_MANAGER_IMAGE_CAINJECTOR=jetstack/cert-manager-cainjector
+
+az acr import --name $REGISTRY_NAME --source $CERT_MANAGER_REGISTRY/$CERT_MANAGER_IMAGE_CONTROLLER:$CERT_MANAGER_TAG --image $CERT_MANAGER_IMAGE_CONTROLLER:$CERT_MANAGER_TAG
+az acr import --name $REGISTRY_NAME --source $CERT_MANAGER_REGISTRY/$CERT_MANAGER_IMAGE_WEBHOOK:$CERT_MANAGER_TAG --image $CERT_MANAGER_IMAGE_WEBHOOK:$CERT_MANAGER_TAG
+az acr import --name $REGISTRY_NAME --source $CERT_MANAGER_REGISTRY/$CERT_MANAGER_IMAGE_CAINJECTOR:$CERT_MANAGER_TAG --image $CERT_MANAGER_IMAGE_CAINJECTOR:$CERT_MANAGER_TAG
+
+ACR_URL=pyaracr.azurecr.io
+
+kubectl label namespace ingress-basic cert-manager.io/disable-validation=true
 helm repo add jetstack https://charts.jetstack.io
-
-# Update your local Helm chart repository cache
 helm repo update
 
 # Install the cert-manager Helm chart
-helm install \
-  --name cert-manager \
-  --namespace cert-manager \
-  --version v0.8.0 \
-  jetstack/cert-manager
+helm install cert-manager jetstack/cert-manager \
+  --namespace ingress-basic \
+  --version=$CERT_MANAGER_TAG \
+  --set installCRDs=true \
+  --set nodeSelector."kubernetes\.io/os"=linux \
+  --set image.repository=$ACR_URL/$CERT_MANAGER_IMAGE_CONTROLLER \
+  --set image.tag=$CERT_MANAGER_TAG \
+  --set webhook.image.repository=$ACR_URL/$CERT_MANAGER_IMAGE_WEBHOOK \
+  --set webhook.image.tag=$CERT_MANAGER_TAG \
+  --set cainjector.image.repository=$ACR_URL/$CERT_MANAGER_IMAGE_CAINJECTOR \
+  --set cainjector.image.tag=$CERT_MANAGER_TAG
 ```
 
 - Cear CA cluster issuer 
 
 ```bash 
-kubectl create -f k8s/letsencrypt/cluster-issuer.yaml
+kubectl apply -f k8s/letsencrypt/cluster-issuer.yaml --namespace ingress-basic
 ```
-
-## Install keel for continuos delivery
-
-clone keel master as the chart is updated to us ingress. then
-
-`helm upgrade --install keel path/to/chart/keel --values values/production/keel.yaml --namespace=kube-system`
 
 ## Hints:
 
 - Una vez que k8s esta funcionando se puede continuar con los pasos detallados en README.md para cada proyecto. 
-- Estamos usando PSQL en una VM con ubuntu administrado "manualmente" porque el postgres de azure es **MUUUY LENTO** 
+- Estamos usando PSQL en una instancia de k8s porque el postgres de azure es **MUUUY LENTO** 
 - Para los sitios que usan SSL no hace falta IP publica. siempre usar la del ingress. 
 - https://kubernetes.io/docs/reference/kubectl/cheatsheet/ 
