@@ -95,31 +95,46 @@ kubectl cp *.dump pgcluster-postgresql-client:/tmp/backup
 I have no name!@pgcluster-postgresql-client:/$ pg_restore --host pgcluster-postgresql -U postgres --d CHANGE_THE_DATABASE /tmp/backup
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Python Argentina community website
 
 http://www.python.org.ar
 
 ```bash
-helm upgrade --install --wait --timeout 60000s --values values/production/pyarweb.yaml pyarweb-production stable/pyarweb
+helm upgrade --install --wait --timeout 120s --values values/production/pyarweb.yaml pyarweb-production stable/pyarweb
 ```
 
 
+## Wiki
 
---
+Using https://github.com/helm/charts/tree/master/testing/wiki
+
+Staging:
+
+```bash
+helm upgrade --install --wait --timeout 120s --values values/staging/pyar-wiki.yaml staging-wiki stable/pyar-wiki --debug
+```
+
+Production:
+
+```bash
+helm upgrade --install --wait --timeout 120s --values values/production/pyar-wiki.yaml prod-wiki stable/pyar-wiki --debug
+```
+
+
+## Asociación Civil administration. (asoc_members)
+
+[Production](https://admin.ac.python.org.ar)
+
+
+```bash
+helm upgrade --install --wait --timeout 120s --values values/production/asoc_members.yaml production-admin stable/asoc-members
+```
+
+## Join Captcha bot
+
+```bash
+helm upgrade --install  --wait --timeout 120s --values values/production/join_captcha_bot.yaml captcha-bot-production stable/join_captcha_bot
+```
 
 
 
@@ -130,9 +145,7 @@ https://eventos.python.org.ar
 Events site, using [EventoL](https://github.com/eventoL/eventoL). We use it to host PyDays, PyCon, Pycamp and other events.
 
 
-
 ### Staging
-
 
 1. Get the static files from the docker image (the version might change. Check the values/staging/eventol.yaml file)
 ```
@@ -156,8 +169,7 @@ az storage copy -s static -d 'https://pyareventol.file.core.windows.net/eventol-
 helm upgrade --install  --wait --timeout 60000 --values values/staging/eventol.yaml staging-eventos stable/eventol
 ```
 
-### Produccion
-
+### Production
 
 
 1. Get the static files from the docker image (the version might change. Check the values/production/eventol.yaml file)
@@ -178,54 +190,5 @@ az storage copy -s static -d 'https://pyareventol.file.core.windows.net/eventol-
 
 3. Deploy to [Production:](https://eventos.python.org.ar)
 ```bash
-helm upgrade --install  --wait --timeout 60000 --values values/production/eventol.yaml production-eventos stable/eventol
-```
-
-## Asociación Civil administration. (asoc_members)
-
-[Production](https://admin.ac.python.org.ar)
-
-
-```bash
-helm upgrade --install --wait --timeout 60000 --values values/production/asoc_members.yaml production-admin stable/asoc-members
-```
-
-
-
-## Wiki
-
-Using https://github.com/helm/charts/tree/master/testing/wiki
-
-### Deploy
-
-```bash
-helm upgrade --install --wait --timeout 60000 --values values/staging/pyar-wiki.yaml staging-wiki stable/pyar-wiki --debug --recreate-pods
-```
-
-```bash
-helm upgrade --install --wait --timeout 60000 --values values/production/pyar-wiki.yaml prod-wiki stable/pyar-wiki --debug --recreate-pods
-```
-
-## Web
-
-Using https://github.com/helm/charts/tree/master/testing/wiki
-
-### Deploy
-
-```bash
-helm upgrade --install --wait --timeout 60000 --values values/staging/pyarweb.yaml pyarweb-staging stable/pyarweb --debug --recreate-pods
-```
-
-```bash
-helm upgrade --install --wait --timeout 60000 --values values/production/pyarweb.yaml pyarweb-production stable/pyarweb --debug --recreate-pods
-```
-
-## Planeta 
-
-```bash
-helm upgrade --install --wait --timeout 60000 --values values/staging/planeta-pyar.yaml staging-planeta test/planeta-pyar --debug --recreate-pods
-```
-
-```bash
-helm upgrade --install --wait --timeout 60000 --values values/production/planeta-pyar.yaml prod-planeta test/planeta-pyar --debug --recreate-pods
+helm upgrade --install  --wait --timeout 120s --values values/production/eventol.yaml production-eventos stable/eventol
 ```

@@ -4,7 +4,7 @@ metadata:
   name: redirect-foro
   annotations:
     kubernetes.io/ingress.class: nginx
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/permanent-redirect: https://pyar.discourse.group/
 spec:
@@ -18,7 +18,7 @@ spec:
         - listas.python.ar
         - listas.python.com.ar
         - listas.pyar.org.ar
-      secretName: foro-tls-secret
+      secretName: tls-secret-foro
   rules:
     - host: charlas.python.org.ar
     - host: charlas.python.ar

@@ -4,7 +4,7 @@ metadata:
   name: redirect-tutorial
   annotations:
     kubernetes.io/ingress.class: nginx
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/permanent-redirect: https://docs.python.org/es/dev/tutorial/
 spec:
@@ -14,7 +14,7 @@ spec:
         - tutorial.python.ar
         - tutorial.python.com.ar
         - tutorial.pyar.org.ar
-      secretName: tutorial-tls-secret
+      secretName: tls-secret-tutorial
   rules:
     - host: tutorial.python.org.ar
     - host: tutorial.python.ar

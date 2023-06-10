@@ -4,7 +4,7 @@ metadata:
   name: redirect-planeta
   annotations:
     kubernetes.io/ingress.class: nginx
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/permanent-redirect: https://planeta.python.org.ar/
 spec:
@@ -14,7 +14,7 @@ spec:
         - planet.python.ar
         - planet.python.com.ar
         - planet.pyar.org.ar
-      secretName: planeta-tls-secret
+      secretName: tls-secret-planeta
   rules:
     - host: planet.python.org.ar
     - host: planet.python.ar

@@ -27,7 +27,7 @@ ingress:
   enabled: true
   annotations: 
     kubernetes.io/ingress.class: nginx
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     # proxy-body-size duplicated intentionally. more at: https://github.com/kubernetes/ingress-nginx/issues/1824#issuecomment-375956711
