@@ -58,6 +58,15 @@ helm upgrade --install --wait -f values/production/postgres_cluster.yaml pgclust
 
 This cluster is using a PersistentVolumeClaim and a "lock" is created manually in azure to prevent unintencional deletes. Detail about locks: https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-lock-resources
 
+To set the backup:
+
+```bash
+kubectl apply -f k8s/pgsql_bkps_jobs/pg-storage-class.yaml
+kubectl apply -f k8s/pgsql_bkps_jobs/pg-persistent-volume-claim.yaml
+kubectl apply -f k8s/pgsql_bkps_jobs/pg-backup-cronJob.yaml
+```
+
+
 
 ### Connect to the cluster
 
@@ -136,6 +145,7 @@ helm upgrade --install --wait --timeout 120s --values values/production/asoc_mem
 helm upgrade --install  --wait --timeout 120s --values values/production/join_captcha_bot.yaml captcha-bot-production stable/join_captcha_bot
 ```
 
+Once up, talk through Telegram with the bot itself and issue: `/allowgroup add CHAT_ID` (the CHAT_ID can be seen in the logs doing something similar to `kubectl logs captcha-bot-production-5d99c5595d-8wcbb`).
 
 
 ## Events site (EventoL)

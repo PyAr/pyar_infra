@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: batch-every-twelve-hours
+  name: postgresql-backup-cron
 spec:
   schedule: "0 */12 * * *"
   jobTemplate:
@@ -24,7 +24,7 @@ spec:
               valueFrom: 
                 secretKeyRef:
                    name: pgcluster-postgresql
-                   key: postgresql-password
+                   key: postgres-password
             volumeMounts:
             - mountPath: "/pg_backup"
               name: backup-volume
@@ -41,7 +41,7 @@ spec:
               valueFrom: 
                 secretKeyRef:
                    name: pgcluster-postgresql
-                   key: postgresql-password
+                   key: postgres-password
             volumeMounts:
             - mountPath: "/pg_backup"
               name: backup-volume
@@ -58,7 +58,7 @@ spec:
               valueFrom: 
                 secretKeyRef:
                    name: pgcluster-postgresql
-                   key: postgresql-password
+                   key: postgres-password
             volumeMounts:
             - mountPath: "/pg_backup"
               name: backup-volume
