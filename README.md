@@ -36,11 +36,16 @@ To handle redirects from other domains we have two models:
 
         kubectl get pods --namespace=ingress-basic
 
-2. nginx server, handling `redirecter.python.org.ar`, the configuration is stored in a config-map: `stable/pyar-rewrites/templates/config_map.yaml`, to deploy it run:
+2. nginx server, handling `redirecter.python.org.ar`, the configuration is stored in a config-map: `stable/pyar-rewrites/templates/config_map.yaml`
+
+    - to deploy it run:
 
 ```bash
 helm upgrade --install --wait pyar-rewrites stable/pyar-rewrites
 ```
+
+    - check its public IP (`LoadBalancer Ingress` after doing `kubectl describe services pyar-rewrites`) and load it in Cloudflare for the `redirecter` entry.
+
 
 
 ## The Database, a PostgreSQL cluster
