@@ -69,6 +69,8 @@ To set the backup:
 kubectl apply -f k8s/pgsql_bkps_jobs/pg-storage-class.yaml
 kubectl apply -f k8s/pgsql_bkps_jobs/pg-persistent-volume-claim.yaml
 kubectl apply -f k8s/pgsql_bkps_jobs/pg-backup-cronJob.yaml
+
+kubectl apply -f k8s/pgsql_bkps_jobs/pg-backup-cronJob.yaml
 ```
 
 
