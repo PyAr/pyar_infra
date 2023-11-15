@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgresql-delete-old-backups
+spec:
+  schedule: "0 1 * * *"
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: delete-old-backups
+            image: pyar/delete_old_backups
+            imagePullPolicy: Always
+            volumeMounts:
+            - mountPath: "/pg_backup"
+              name: backup-volume
+          volumes:
+            - name: backup-volume
+              persistentVolumeClaim:
+                claimName: pg-backup-pvc
