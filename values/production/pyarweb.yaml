@@ -58,3 +58,5 @@ env:
   DJANGO_SETTINGS_MODULE: pyarweb.settings.production
   POSTGRES_HOST: pgcluster-postgresql
   BASE_URL: www.python.org.ar
+
+cronEnabled: true
