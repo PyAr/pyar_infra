@@ -1,0 +1,32 @@
+{{- if .Values.cronEnabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "pyarweb.fullname" . }}-reminder-unmoderated-offers-cron
+spec:
+  schedule: "15 6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: {{ .Chart.Name }}-expire-old-offers-cron 
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              env:
+              {{- range $key, $value := .Values.env }}
+                - name: {{ $key | upper | replace "." "_" }}
+                  value: {{ quote $value }}
+              {{- end }}
+              {{- if .Values.secretsName }}
+              {{ include "env.secrets" . | indent 16 }}
+              {{- end }}
+              command:
+                - '/bin/bash'
+                - '-c' 
+                - 'python3 ./manage.py notify_pending_moderation_offers'
+              resources:
+                {{- toYaml .Values.resources | nindent 16 }}
+{{- end }}
+
