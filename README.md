@@ -1,4 +1,4 @@
- # Python Argentina Infrastructure
+# Python Argentina Infrastructure
 
 This is the repository with all the code and documentation to handle PyAr infrastructure
 
