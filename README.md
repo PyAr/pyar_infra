@@ -120,19 +120,7 @@ helm upgrade --install --wait --timeout 120s --values values/production/pyarweb.
 
 ## Wiki
 
-Using https://github.com/helm/charts/tree/master/testing/wiki
-
-Staging:
-
-```bash
-helm upgrade --install --wait --timeout 120s --values values/staging/pyar-wiki.yaml staging-wiki stable/pyar-wiki --debug
-```
-
-Production:
-
-```bash
-helm upgrade --install --wait --timeout 120s --values values/production/pyar-wiki.yaml prod-wiki stable/pyar-wiki --debug
-```
+The Wiki is hosted on GitHub Pages and Cloudflare is configured to forward [https://wiki.python.org.ar/](https://wiki.python.org.ar/) to [https://pyar.github.io](https://pyar.github.io).
 
 
 ## Asociación Civil administration. (asoc_members)
