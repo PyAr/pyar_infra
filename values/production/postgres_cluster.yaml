@@ -293,8 +293,13 @@ slave:
 ##
 resources:
   requests:
-    memory: 256Mi
-    cpu: 250m
+    memory: "2Gi"
+    cpu: "1"
+    ephemeral-storage: "50Mi"
+  limits:
+    memory: "6Gi"
+    cpu: "2"
+    ephemeral-storage: "1Gi"
 
 networkPolicy:
   ## Enable creation of NetworkPolicy resources.
