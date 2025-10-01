@@ -60,3 +60,7 @@ mediafiles:
   azure:
     secretName: eventol-production-secret-azure-file
     shareName: eventol-prod-static
+
+redis:
+  image:
+    repository: bitnamilegacy/redis
